@@ -1,1 +1,1 @@
-# new_minishell
+# minishell
