@@ -74,10 +74,14 @@ clean:
 fclean:
 	@echo "\033[0;31mCleaning libft..."
 	@make fclean -C libft/
+	@rm -f libft.a
 	@echo "\nDeleting objects..."
 	@rm -f $(OBJ)
 	@echo "\nDeleting executable..."
 	@rm -f $(NAME)
+	@echo "\nDeleting trash..."
+	@rm -f *.txt
+	@rm -f *.out
 	@echo "\033[0m"
 
 re: fclean all

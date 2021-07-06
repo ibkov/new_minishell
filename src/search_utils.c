@@ -77,7 +77,7 @@ int search_in_current_dir(char **envp, char *command, t_main *main)
 {
     DIR *dir;
     char *pwd;
-
+    
     pwd = get_envi_val(envp, "PWD");
     pwd = pwd + 4;
     if(!(dir = opendir(pwd)))
@@ -90,12 +90,14 @@ int search_in_current_dir(char **envp, char *command, t_main *main)
 
 int search_binary(char *command, char **envp, t_main *main)
 {
-
-    if (search_in_path(envp, command, main))
+    if ((ft_strncmp(command, "./", 2) == 0))
+    {
+        if (search_in_current_dir(envp, command + 2, main))
+            return (1);
+    }
+    else if (search_in_path(envp, command, main))
         return (1);
-    if (search_in_current_dir(envp, command, main))
-        return (1);
-    if(search_in_command(ft_strdup(command), main))
+    else if(search_in_command(ft_strdup(command), main))
         return (1);
     return (0);
 }

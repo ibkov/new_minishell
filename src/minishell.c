@@ -73,6 +73,7 @@ t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 	if(fork() == 0)
 	{
 		dup2(pipes[0][1], 1);
+		pipe_redirect(main);
 		close_pipes(proc_num, pipes);
 		execve(main->unix_path, main->tokens, main->envp);
 	}
@@ -208,7 +209,6 @@ int main(int argc, __unused char **argv, char **envp)
 	{
 		init_envp(&main, envp);
 		sig_init();
-		// change_envp(main.envp, "SHLVL=", "2");
 		while(main.exit == 0)
 		{
 			if (parse(&main))
