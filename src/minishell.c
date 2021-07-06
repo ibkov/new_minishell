@@ -151,6 +151,13 @@ int executor(__unused t_main *main, t_token *token)
 			wait(NULL);
 		}
 	}
+	else
+	{
+		if(is_builtin(token->str))
+			execve_builtin(main);
+		else if (is_bin(token->str, main))
+			execve_bin(main);
+	}
 	
 	return (0);
 	// if (is_pipe(main->token))
