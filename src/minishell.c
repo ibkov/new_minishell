@@ -19,56 +19,40 @@ int is_pipe(t_token *token)
 	return (i);
 }
 
-int first_pipe(t_token *token)
+int **init_pipes(int amount_pipe)
 {
-	while (token && token->type != END)
-	{
-		if (token->type == PIPE)
-			return (0);
-		token = token->prev;
-	}
-	return (1);
-}
-
-int last_pipe(t_token *token)
-{
-	while (token && token->type != END)
-	{
-		if (token->type == PIPE)
-			return (0);
-		token = token->next;
-	}
-	return (1);
-}
-
-int middle_pipe(t_token *token)
-{
-	if (first_pipe(token) == 0 && last_pipe(token) == 0)
-	{
-		return (1);
-	}
-	return (0);
-}
-
-#define PROCESS_NUM 3
-
-int executor(__unused t_main *main, t_token *token)
-{
-	// int fd[2];
+	int **pipes;
 	int i;
-	// int pids = 0;
-	// int fd1[2];
-	// int pids[PROCESS_NUM];
-	// int pipes[PROCESS_NUM + 1][2];
-	//рефакторинг
-	
+
+	i = 0;
+	pipes = (int **)malloc(sizeof(int *) * (amount_pipe + 1));
+	if(!pipes)
+		return (NULL);
+	pipes[amount_pipe] = NULL;
+	while(i < amount_pipe)
+	{
+		pipes[i] = (int *)malloc(sizeof(int) * 2);
+		if(!pipes[i])
+			return (NULL);
+		pipe(pipes[i]);
+		i++;
+	}
+	return (pipes);
+}
+
+int executor(t_main *main, t_token *token)
+{
+	int i;
+	int **pipes;
+
+
 	main->token = token;
 	if ((i = is_pipe(token)) > 0)
 	{
 		int proc_num = i + 1;
-		int pipes[i][2];
-		for(int i = 0; i < proc_num - 1; i++)
-			pipe(pipes[i]);
+		pipes = init_pipes(i);
+		// for(int i = 0; i < proc_num - 1; i++)
+		// 	pipe(pipes[i]);
 		for(int i = 0; i < proc_num; i++)
 		{
 			if(is_bin(token->str, main))
@@ -148,7 +132,9 @@ int executor(__unused t_main *main, t_token *token)
 		}
 		for(int i = 0; i < proc_num; i++)
 		{
-			wait(NULL);
+			wait(&g_sig.exit_status);
+			WIFEXITED(g_sig.exit_status);
+			g_sig.exit_status %= 255;
 		}
 	}
 	else
@@ -158,100 +144,7 @@ int executor(__unused t_main *main, t_token *token)
 		else if (is_bin(token->str, main))
 			execve_bin(main);
 	}
-	
 	return (0);
-	// if (is_pipe(main->token))
-	// {
-	// 	pipe(fd);
-	// 	pipe(fd1);
-	// 	while (token && token->type != END)
-	// 	{
-	// 		if(is_bin(token->str, main))
-	// 		{
-	// 			if (first_pipe(token))
-	// 			{
-	// 				main->tokens = create_argv(token);
-	// 				if(fork() == 0)
-	// 				{
-	// 					dup2(fd[1], 1);
-	// 					close(fd[0]);
-	// 					close(fd1[0]);
-	// 					close(fd1[1]);
-	// 					close(fd[1]);
-	// 					redirect(main);
-	// 					execve(main->unix_path, main->tokens, main->envp);
-	// 					printf("zsh: command not found: %s\n", main->tokens[0]);
-	// 					exit(1);
-	// 				}
-	// 				else 
-	// 				{
-	// 					while (token && token->type != PIPE)
-	// 					{
-	// 						token = token->next;
-	// 					}
-	// 					token = token->next;
-	// 				}
-	// 			}
-	// 			else if(middle_pipe(token))
-	// 			{
-	// 				main->tokens = create_argv(token);
-	// 				if(fork() == 0)
-	// 				{
-	// 					dup2(fd[0], 0);
-	// 					dup2(fd1[1], 1);
-	// 					close(fd1[0]);
-	// 					close(fd[1]);
-	// 					close(fd[0]);
-	// 					close(fd1[1]);
-	// 					redirect(main);
-	// 					execve(main->unix_path, main->tokens, main->envp);
-	// 					printf("zsh: command not found: %s\n", main->tokens[0]);
-	// 					exit(1);
-	// 				}
-	// 				else
-	// 				{
-	// 					while (token && token->type != PIPE)
-	// 					{
-	// 						token = token->next;
-	// 					}
-	// 					token = token->next;
-	// 				}
-
-	// 			}
-	// 			else if(last_pipe(token))
-	// 			{
-	// 				main->tokens = create_argv(token);
-	// 				if(fork() == 0)
-	// 				{
-	// 					dup2(fd1[0], 0);
-	// 					close(fd1[1]);
-	// 					close(fd[1]);
-	// 					close(fd[0]);
-	// 					close(fd1[0]);
-	// 					redirect(main);
-	// 					execve(main->unix_path, main->tokens, main->envp);
-	// 					printf("zsh: command not found: %s\n", main->tokens[0]);
-	// 					exit(1);
-	// 				}
-	// 				else
-	// 				{
-	// 					while (token && token->type != PIPE)
-	// 					{
-	// 						token = token->next;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// close(fd[0]);
-	// close(fd[1]);
-	// close(fd1[0]);
-	// close(fd1[1]);
-	// wait(NULL);
-	// wait(NULL);
-	// wait(NULL);
-	// return (0);
 }
 
 t_token	*next_cmd(t_token *token, int skip)
@@ -303,7 +196,6 @@ int main(int argc, __unused char **argv, char **envp)
 				{
 					if (main.token && main.token->type == END)
 						main.token = main.token->next;
-					printf("Go\n");
 					if(main.token && minishell(&main))
 						break;
 					while(main.token && main.token->type != END)
