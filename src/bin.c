@@ -14,6 +14,8 @@ int		is_builtin(char *command)
 		return (1);
 	if (ft_strcmp(command, "pwd") == 0)
 		return (1);
+	if (ft_strcmp(command, "$?") == 0)
+		return (1);
 	if (ft_strcmp(command, "exit") == 0)
 		return (1);
 	return (0);
@@ -36,6 +38,11 @@ void execve_builtin(t_main *main)
 		sh_pwd();
 	else if (ft_strncmp(main->token->str, "echo", 4) == 0)
 		sh_echo(main);
+	else if (ft_strncmp(main->token->str, "$?", 2) == 0)
+	{
+		printf("minishell: command not found: %d\n", main->exit_code);
+		return ;
+	}
 	else if (ft_strncmp(main->token->str, "exit", 4) == 0)
 		sh_exit(main);
 }
