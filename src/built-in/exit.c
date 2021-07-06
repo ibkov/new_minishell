@@ -18,13 +18,15 @@ int sh_exit(t_main *main)
         }
         else if (!ft_isdigit(main->token->next->str[0]))
         {
-            main->exit = 255;
+            main->exit = 1;
+            main->exit_code = 255;
             printf("minishell: exit: %s: numeric argument required\n", main->token->next->str);
             skip_args(main);
         }
         else
         {
-            main->exit = ft_atoi(main->token->next->str) % 256;
+            main->exit = 1;
+            main->exit_code = ft_atoi(main->token->next->str) % 256;
             skip_args(main);
             printf("exit\n");
         }    
