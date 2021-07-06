@@ -40,102 +40,123 @@ int **init_pipes(int amount_pipe)
 	return (pipes);
 }
 
+void close_pipes(int proc_num, int **pipes)
+{
+	int i;
+
+	i = 0;
+	while(i < proc_num - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
+	}
+}
+
+void wait_proccess(int proc_num)
+{
+	int i;
+
+	i = 0;
+	while(i < proc_num)
+	{
+		wait(&g_sig.exit_status);
+		WIFEXITED(g_sig.exit_status);
+		g_sig.exit_status %= 255;
+		i++;
+	}
+}
+
+t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
+{
+	main->tokens = create_argv(token);
+	if(fork() == 0)
+	{
+		dup2(pipes[0][1], 1);
+		close_pipes(proc_num, pipes);
+		execve(main->unix_path, main->tokens, main->envp);
+	}
+	else 
+	{
+		while (token && token->type != PIPE)
+		{
+			token = token->next;
+		}
+		token = token->next;
+	}
+	return (token);
+}
+
+t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i)
+{
+	main->tokens = create_argv(token);
+	if(fork() == 0)
+	{
+		dup2(pipes[i - 1][0], 0);
+		close_pipes(proc_num, pipes);
+		execve(main->unix_path, main->tokens, main->envp);
+	}
+	else 
+	{
+		while (token && token->type != PIPE)
+		{
+			token = token->next;
+		}
+	}
+	return (token);
+}
+
+t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i)
+{
+	main->tokens = create_argv(token);
+	if(fork() == 0)
+	{
+		dup2(pipes[i - 1][0], 0);
+		dup2(pipes[i][1], 1);
+		close_pipes(proc_num, pipes);
+		execve(main->unix_path, main->tokens, main->envp);
+	}
+	else 
+	{
+		while (token && token->type != PIPE)
+		{
+			token = token->next;
+		}
+		token = token->next;
+	}
+	return (token);
+}
+
 int executor(t_main *main, t_token *token)
 {
 	int i;
 	int **pipes;
-
 
 	main->token = token;
 	if ((i = is_pipe(token)) > 0)
 	{
 		int proc_num = i + 1;
 		pipes = init_pipes(i);
-		// for(int i = 0; i < proc_num - 1; i++)
-		// 	pipe(pipes[i]);
 		for(int i = 0; i < proc_num; i++)
 		{
 			if(is_bin(token->str, main))
 			{
 				if(i == 0)
 				{
-					main->tokens = create_argv(token);
-					if(fork() == 0)
-					{
-						dup2(pipes[i][1], 1);
-						for(int i = 0;i < proc_num - 1; i++)
-						{
-							close(pipes[i][0]);
-							close(pipes[i][1]);
-						}
-						execve(main->unix_path, main->tokens, main->envp);
-					}
-					else 
-					{
-						while (token && token->type != PIPE)
-						{
-							token = token->next;
-						}
-						token = token->next;
-					}
+					token = first_pipe(main, token, pipes, proc_num);
 				}
 				else if(i == proc_num - 1)
 				{
-					main->tokens = create_argv(token);
-					if(fork() == 0)
-					{
-						dup2(pipes[i - 1][0], 0);
-						for(int i = 0;i < proc_num - 1; i++)
-						{
-							close(pipes[i][0]);
-							close(pipes[i][1]);
-						}
-						execve(main->unix_path, main->tokens, main->envp);
-					}
-					else 
-					{
-						while (token && token->type != PIPE)
-						{
-							token = token->next;
-						}
-					}
+					token = last_pipe(main, token, pipes, proc_num, i);
 				}
 				else if(i > 0 && i < proc_num - 1)
 				{
-					main->tokens = create_argv(token);
-					if(fork() == 0)
-					{
-						dup2(pipes[i - 1][0], 0);
-						dup2(pipes[i][1], 1);
-						for(int i = 0;i < proc_num - 1; i++)
-						{
-							close(pipes[i][0]);
-							close(pipes[i][1]);
-						}
-						execve(main->unix_path, main->tokens, main->envp);
-					}
-					else 
-					{
-						while (token && token->type != PIPE)
-						{
-							token = token->next;
-						}
-						token = token->next;
-					}
+					token = middle_pipe(main, token, pipes, proc_num, i);
 				}
 			}
 		}
-		for(int i = 0; i < proc_num - 1; i++)
-		{
-			close(pipes[i][0]);
-			close(pipes[i][1]);
-		}
-		for(int i = 0; i < proc_num; i++)
-		{
-			wait(&g_sig.exit_status);
-			WIFEXITED(g_sig.exit_status);
-			g_sig.exit_status %= 255;
-		}
+		close_pipes(proc_num, pipes);
+		wait_proccess(proc_num);
 	}
 	else
 	{
