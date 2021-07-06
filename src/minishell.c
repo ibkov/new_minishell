@@ -207,5 +207,5 @@ int main(int argc, __unused char **argv, char **envp)
 		}
 	}
 	free_argv(main.envp);
-	return (main.exit);
+	return (main.exit_code);
 }
