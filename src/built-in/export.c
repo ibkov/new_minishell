@@ -33,7 +33,7 @@ void create_env1(t_main *main)
 
 void sh_export(t_main *main)
 {
-    if (!main->token)
+    if (main->token && !main->token->next)
     {
         sh_env(main);
     }

@@ -12,5 +12,6 @@ void sh_env(t_main *main)
 	{
 		printf("%s\n", envp[i++]);
 	}
-    dup2(0, 1);
+    while (main->token && main->token->type != END)
+            main->token = main->token->next;
 }

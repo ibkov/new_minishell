@@ -74,14 +74,18 @@ t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 	{
 		dup2(pipes[0][1], 1);
 		close_pipes(proc_num, pipes);
-		execve(main->unix_path, main->tokens, main->envp);
+		if(is_builtin(token->str))
+		{
+			execve_builtin(main);
+			exit(0);
+		}
+		else
+			execve(main->unix_path, main->tokens, main->envp);
 	}
 	else 
 	{
 		while (token && token->type != PIPE)
-		{
 			token = token->next;
-		}
 		token = token->next;
 	}
 	return (token);
