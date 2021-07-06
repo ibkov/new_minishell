@@ -30,6 +30,7 @@ void init_envp(t_main *main, char **envp)
         main->envp[i] = ft_strdup(envp[i]);
         i++;
     }
+    increment_lvl(main->envp);
     main->unix_path = NULL;
 }
 

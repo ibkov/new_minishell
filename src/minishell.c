@@ -208,7 +208,7 @@ int main(int argc, __unused char **argv, char **envp)
 	{
 		init_envp(&main, envp);
 		sig_init();
-		change_envp(main.envp, "SHLVL=", "2");
+		// change_envp(main.envp, "SHLVL=", "2");
 		while(main.exit == 0)
 		{
 			if (parse(&main))

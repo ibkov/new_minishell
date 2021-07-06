@@ -81,6 +81,7 @@ char    *create_path(char **components, int len);
 int     count_len(char **argv);
 void    change_envp(char **envp, char *variable, char *value);
 void    init_envp(t_main *main, char **envp);
+int 	increment_lvl(char **envp);
 
 char 	**create_argv(t_token *token);
 int		search_binary(char *command, char **envp, t_main *main);
