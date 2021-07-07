@@ -40,6 +40,7 @@ char *add_spaces(char *str, int spaces)
 	char *new_str;
 
 	new_str = ft_strdup(str);
+	free(str);
 	while(spaces > 0)
 	{
 		tmp = new_str;
