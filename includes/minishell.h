@@ -86,6 +86,9 @@ int 	increment_lvl(char **envp);
 char 	**create_argv(t_token *token);
 int		search_binary(char *command, char **envp, t_main *main);
 char 	*get_envi_val(char **envp, char *var);
+char	*space_line(char *line);
+t_token *create_tokens(char *line);
+int magic_box(t_token *token, char **envp);
 
 int		is_builtin(char *command);
 void execve_builtin(t_main *main);

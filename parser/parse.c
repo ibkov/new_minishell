@@ -90,7 +90,7 @@ void	type_arg(t_token *token, int separator)
 		token->type = ARG;
 }
 
-static t_token *create_tokens(char *line)
+t_token *create_tokens(char *line)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -229,10 +229,10 @@ int magic_box(t_token *token, char **envp)
 
 	while (token)
 	{
-		if(token->type == ARG)
+		if(token->type == ARG || token->type == CMD)
 		{
 			cmd = token->str;
-			if (*cmd == -36)
+			if (*cmd == -36 || *cmd == 36)
 			{
 				free(token->str);
 				if(!(var = get_envi_val(envp, cmd + 1)))
@@ -261,7 +261,7 @@ int   parse(__unused t_main *main)
 	}
 	if (cmd && cmd[0])
 	{
-			add_history(cmd);
+		add_history(cmd);
 		if (quote_check(main, &cmd))
 			return (0);
 		cmd = space_line(cmd);
