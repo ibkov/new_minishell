@@ -80,7 +80,7 @@ t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 			execve_builtin(main);
 			exit(0);
 		}
-		else
+		else if(is_bin(token->str, main))
 			execve(main->unix_path, main->tokens, main->envp);
 	}
 	else 
@@ -99,7 +99,13 @@ t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int 
 	{
 		dup2(pipes[i - 1][0], 0);
 		close_pipes(proc_num, pipes);
-		execve(main->unix_path, main->tokens, main->envp);
+		if(is_builtin(token->str))
+		{
+			execve_builtin(main);
+			exit(0);
+		}
+		else if(is_bin(token->str, main))
+			execve(main->unix_path, main->tokens, main->envp);
 	}
 	else 
 	{
@@ -119,7 +125,13 @@ t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, in
 		dup2(pipes[i - 1][0], 0);
 		dup2(pipes[i][1], 1);
 		close_pipes(proc_num, pipes);
-		execve(main->unix_path, main->tokens, main->envp);
+		if(is_builtin(token->str))
+		{
+			execve_builtin(main);
+			exit(0);
+		}
+		else if(is_bin(token->str, main))
+			execve(main->unix_path, main->tokens, main->envp);
 	}
 	else 
 	{
@@ -144,20 +156,17 @@ int executor(t_main *main, t_token *token)
 		pipes = init_pipes(i);
 		for(int i = 0; i < proc_num; i++)
 		{
-			if(is_bin(token->str, main))
+			if(i == 0)
 			{
-				if(i == 0)
-				{
-					token = first_pipe(main, token, pipes, proc_num);
-				}
-				else if(i == proc_num - 1)
-				{
-					token = last_pipe(main, token, pipes, proc_num, i);
-				}
-				else if(i > 0 && i < proc_num - 1)
-				{
-					token = middle_pipe(main, token, pipes, proc_num, i);
-				}
+				token = first_pipe(main, token, pipes, proc_num);
+			}
+			else if(i == proc_num - 1)
+			{
+				token = last_pipe(main, token, pipes, proc_num, i);
+			}
+			else if(i > 0 && i < proc_num - 1)
+			{
+				token = middle_pipe(main, token, pipes, proc_num, i);
 			}
 		}
 		close_pipes(proc_num, pipes);
@@ -169,6 +178,8 @@ int executor(t_main *main, t_token *token)
 			execve_builtin(main);
 		else if (is_bin(token->str, main))
 			execve_bin(main);
+		else
+			printf("minishell: command not found: %s\n", token->str);
 	}
 	return (0);
 }

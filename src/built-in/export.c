@@ -33,13 +33,14 @@ void create_env1(t_main *main)
 
 void sh_export(t_main *main)
 {
-    if (main->token && !main->token->next)
+    if (main->token && (!main->token->next \
+    || (main->token->next && main->token->next->type != ARG)))
     {
         sh_env(main);
     }
     else
     {
-        while (main->token && main->token->type != END){
+        while ((main->token && main->token->type != END && main->token->type != PIPE)){
             if (ft_isdigit(main->token->str[0]))
             {
                 printf("export: not an identifier: %s\n", main->token->str);
