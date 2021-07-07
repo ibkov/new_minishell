@@ -3,12 +3,12 @@
 int *check_space(char *str)
 {
 	int *spaces;
-	int i = 1;
+	int i = 0;
 	int j = 0;
 
 	while (str[i] != '\0')
 	{
-		if(str[i] == ' ' && str[i - 1] != ' ')
+		if(str[i] == ' ' && str[i + 1] != ' ')
 			j++;
 		i++;
 	}
@@ -56,11 +56,12 @@ void heredoc(__unused t_main *main, __unused char *delimitr)
 	char *cmd = NULL;
 	char *str = "";
 	int *spaces;
-	int i = 0;
+	int i;
 
 	pipe(fd);
 	if(!fork())
 	{
+		i = 0;
 		close(fd[0]);
 		while(1)
 		{
@@ -74,12 +75,18 @@ void heredoc(__unused t_main *main, __unused char *delimitr)
 			while(token)
 			{
 				str = ft_strjoin(str, token->str);
-				str = add_spaces(str, spaces[i]);
-				i++;
+				if(spaces[i])
+				{
+					str = add_spaces(str, spaces[i]);
+					i++;
+				}
 				if (token->next == 0)
 					str = ft_strjoin(str, "\n");
 				token = token->next;
 			}
+			i = 0;
+			free(spaces);
+			spaces = NULL;
 		}
 		write(fd[1], str, ft_strlen(str));
 		close(fd[1]);
