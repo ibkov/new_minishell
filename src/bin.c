@@ -62,7 +62,7 @@ void execve_bin(t_main *main)
 	{
 		redirect(main);
 		execve(main->unix_path, main->tokens, main->envp);
-		printf("zsh: command not found: %s\n", main->tokens[0]);
+		printf("minishell: %s: command not found\n", main->tokens[0]);
 		exit(0);
 	}
 	else if (g_sig.pid > 0)

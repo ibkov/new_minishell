@@ -23,6 +23,10 @@
 # define NOSKIP 0
 # define SKIP 1
 
+#define STR_ERROR 12
+#define STR_NOFILE 11
+#define STD_ERROR 10
+
 enum types
 {
     EMPTY,
@@ -70,6 +74,7 @@ typedef struct s_main
     char    **envp;
     int     exit;
     int     quit;
+	int 	error;
 	int		exit_code;
 	t_token	*token;
 	t_redirect redirect;
