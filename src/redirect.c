@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int heredoc(__unused t_main *main, char *delimitr)
+int heredoc(__unused t_main *main, __unused char *delimitr)
 {
 	int fd[2];
 	t_token *token;
@@ -58,7 +58,7 @@ void	redirect(t_main *main)
 	{
 		heredoc(main, token->next->next->str);
 	}
-	else if(token->type == TRUNC)
+	if(token->type == TRUNC)
 	{
 		fd = open(token->next->str, O_WRONLY|O_CREAT|O_TRUNC, 0664);
 		dup2(fd, 1);

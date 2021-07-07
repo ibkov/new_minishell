@@ -28,8 +28,8 @@ REMOVE = rm -f
 
 all:		$(NAME)
 
-$(NAME):	$(OBJ) 
-			@$(LIB) $(OBJ)
+$(NAME):	$(OBJ) $(OBJ_BONUS) 
+			@$(LIB) $(OBJ) $(OBJ_BONUS) 
 			@$(RANLIB)
 
 clean:	

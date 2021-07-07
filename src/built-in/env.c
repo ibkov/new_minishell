@@ -4,7 +4,6 @@ void sh_env(t_main *main)
 {
     char **envp;
     int i;
-
     envp = main->envp;
     i = 0;
     // redirect(main);
