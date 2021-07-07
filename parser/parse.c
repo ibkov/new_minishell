@@ -90,7 +90,7 @@ void	type_arg(t_token *token, int separator)
 		token->type = ARG;
 }
 
-static t_token *create_tokens(char *line)
+t_token *create_tokens(char *line)
 {
 	t_token	*prev;
 	t_token	*next;
@@ -229,7 +229,7 @@ int magic_box(t_token *token, char **envp)
 
 	while (token)
 	{
-		if(token->type == ARG || token->type == CMD)  
+		if(token->type == ARG || token->type == CMD)
 		{
 			cmd = token->str;
 			if (*cmd == -36 || *cmd == 36)

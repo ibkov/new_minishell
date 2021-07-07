@@ -1,25 +1,95 @@
 #include "minishell.h"
 
-int heredoc(__unused t_main *main, __unused char *delimitr)
+int *check_space(char *str)
+{
+	int *spaces;
+	int i = 0;
+	int j = 0;
+
+	while (str[i])
+	{
+		if(str[i] == ' ' && str[i -1] != ' ')
+			j++;
+		i++;
+	}
+	i = 0;
+	j = 0;
+	int len = j;
+	j = 0;
+	spaces = (int *)malloc(sizeof(int ) * j);
+	while (str[i])
+	{
+		if(str[i] == ' ')
+		{
+			j++;
+			if(str[i + 1] != ' ')
+			{
+				spaces[len] = j;
+				j = 0;
+				len++;
+			}
+		}
+		i++;
+	}
+	return (spaces);
+}
+
+char *add_spaces(char *str, int spaces)
+{
+	char *tmp;
+	char *new_str;
+
+	new_str = ft_strdup(str);
+	while(spaces > 0)
+	{
+		tmp = new_str;
+		new_str = ft_strjoin(new_str, " ");
+		free(tmp);
+		spaces--;
+	}
+	return (new_str);
+}
+
+void heredoc(__unused t_main *main, __unused char *delimitr)
 {
 	int fd[2];
-	char *cmd = "3";
-	char *mas;
+	t_token *token;
+	char *cmd = NULL;
+	char *str = "";
+	int *spaces;
+	int i = 0;
 
 	pipe(fd);
 	if(!fork())
 	{
-		while(ft_strcmp(cmd, delimitr) != 0)
+		close(fd[0]);
+		while(1)
 		{
 			cmd = readline("heredoc>");
-			mas = ft_strdup(cmd);
-			free(cmd);
+			if(ft_strcmp(cmd, delimitr) == 0)
+				break;
+			spaces = check_space(cmd);
+			cmd = space_line(cmd);
+			token = create_tokens(cmd);
+			magic_box(token, main->envp);
+			while(token)
+			{
+				str = ft_strjoin(str, token->str);
+				str = add_spaces(str, spaces[i]);
+				i++;
+				if (token->next == 0)
+					str = ft_strjoin(str, "\n");
+				token = token->next;
+			}
 		}
-		printf("%s\n", mas);
+		write(fd[1], str, ft_strlen(str));
+		close(fd[1]);
 		exit(0);
 	}
 	wait(&g_sig.exit_status);
-	return (0);
+	dup2(fd[0], 0);
+	close(fd[1]);
+	close(fd[0]);
 }
 
 void	redirect(t_main *main)
@@ -36,7 +106,7 @@ void	redirect(t_main *main)
 	{
 		heredoc(main, token->next->next->str);
 	}
-	if(token->type == TRUNC)
+	else if(token->type == TRUNC)
 	{
 		fd = open(token->next->str, O_WRONLY|O_CREAT|O_TRUNC, 0664);
 		dup2(fd, 1);
@@ -78,8 +148,6 @@ void	pipe_redirect(t_main *main)
 		{
 			fd = open(token->next->str, O_WRONLY|O_CREAT|O_APPEND, 0664);
 			dup2(fd, 1);
-			// close(fd);
-			// close(fd_write);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
 	}
