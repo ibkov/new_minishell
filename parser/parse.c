@@ -266,6 +266,12 @@ int   parse(__unused t_main *main)
 			return (0);
 		cmd = space_line(cmd);
 		main->token = create_tokens(cmd);
+		// while(main->token)
+		// {
+		// 	printf("%s - %d\n", main->token->str, main->token->type);
+		// 	main->token = main->token->next;
+		// }
+		// exit(0);
 		magic_box(main->token, main->envp);
 		return (1);
 	}

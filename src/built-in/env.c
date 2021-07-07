@@ -7,11 +7,11 @@ void sh_env(t_main *main)
 
     envp = main->envp;
     i = 0;
-    redirect(main);
+    // redirect(main);
     while (envp[i] != NULL)
 	{
 		printf("%s\n", envp[i++]);
 	}
-    while (main->token && main->token->type != END)
-            main->token = main->token->next;
+    // while (main->token && main->token->type != END)
+    //         main->token = main->token->next;
 }

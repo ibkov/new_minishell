@@ -52,6 +52,4 @@ void sh_export(t_main *main)
             main->token = main->token->next;
         }
     }
-
-
 }
