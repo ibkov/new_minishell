@@ -229,16 +229,17 @@ int magic_box(t_token *token, char **envp)
 
 	while (token)
 	{
-		if(token->type == ARG)
+		if(token->type == ARG || token->type == CMD)  
 		{
 			cmd = token->str;
-			if (*cmd == -36)
+			if (*cmd == -36 || *cmd == 36)
 			{
 				free(token->str);
 				if(!(var = get_envi_val(envp, cmd + 1)))
 					token->str = "";
 				else
 					token->str = ft_strdup(var + ft_strlen(cmd));
+					
 			}
 		}
 		token = token->next;
@@ -261,18 +262,19 @@ int   parse(__unused t_main *main)
 	}
 	if (cmd && cmd[0])
 	{
-			add_history(cmd);
+		add_history(cmd);
 		if (quote_check(main, &cmd))
 			return (0);
 		cmd = space_line(cmd);
 		main->token = create_tokens(cmd);
+		magic_box(main->token, main->envp);
 		// while(main->token)
 		// {
 		// 	printf("%s - %d\n", main->token->str, main->token->type);
 		// 	main->token = main->token->next;
 		// }
 		// exit(0);
-		// magic_box(main->token, main->envp);
+		
 		return (1);
 	}
 	else
