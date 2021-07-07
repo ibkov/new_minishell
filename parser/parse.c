@@ -272,7 +272,7 @@ int   parse(__unused t_main *main)
 		// 	main->token = main->token->next;
 		// }
 		// exit(0);
-		magic_box(main->token, main->envp);
+		// magic_box(main->token, main->envp);
 		return (1);
 	}
 	else

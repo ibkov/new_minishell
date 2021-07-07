@@ -1,26 +1,23 @@
 #include "minishell.h"
 
-int heredoc(__unused t_main *main, char *delimitr)
+int heredoc(__unused t_main *main, __unused char *delimitr)
 {
 	int fd[2];
-	char *cmd = NULL;
+	char *cmd = "3";
+	char *mas;
 
-	printf("%s", delimitr);
 	pipe(fd);
 	if(!fork())
 	{
-		dup2(fd[1], 1);
-		close(fd[0]);
-		close(fd[1]);
-		while(cmd != delimitr)
+		while(ft_strcmp(cmd, delimitr) != 0)
 		{
 			cmd = readline("heredoc>");
-			printf("%s", cmd);
+			mas = ft_strdup(cmd);
+			free(cmd);
 		}
+		printf("%s\n", mas);
 		exit(0);
 	}
-	close(fd[0]);
-	close(fd[1]);
 	wait(&g_sig.exit_status);
 	return (0);
 }
@@ -31,7 +28,7 @@ void	redirect(t_main *main)
 	t_token *token;
 
 	token = main->token;
-	while (token && token->type != TRUNC && token->type != APPEND && token->type != INPUT)
+	while (token && token->next && token->type != TRUNC && token->type != APPEND && token->type != INPUT)
 	{
 		token = token->next;
 	}
@@ -39,7 +36,7 @@ void	redirect(t_main *main)
 	{
 		heredoc(main, token->next->next->str);
 	}
-	else if(token->type == TRUNC)
+	if(token->type == TRUNC)
 	{
 		fd = open(token->next->str, O_WRONLY|O_CREAT|O_TRUNC, 0664);
 		dup2(fd, 1);
