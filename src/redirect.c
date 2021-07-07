@@ -3,20 +3,19 @@
 int *check_space(char *str)
 {
 	int *spaces;
-	int i = 0;
+	int i = 1;
 	int j = 0;
 
-	while (str[i])
+	while (str[i] != '\0')
 	{
-		if(str[i] == ' ' && str[i -1] != ' ')
+		if(str[i] == ' ' && str[i - 1] != ' ')
 			j++;
 		i++;
 	}
 	i = 0;
-	j = 0;
-	int len = j;
-	j = 0;
 	spaces = (int *)malloc(sizeof(int ) * j);
+	j = 0;
+	int len = 0;
 	while (str[i])
 	{
 		if(str[i] == ' ')
@@ -40,7 +39,6 @@ char *add_spaces(char *str, int spaces)
 	char *new_str;
 
 	new_str = ft_strdup(str);
-	free(str);
 	while(spaces > 0)
 	{
 		tmp = new_str;
@@ -67,7 +65,7 @@ void heredoc(__unused t_main *main, __unused char *delimitr)
 		while(1)
 		{
 			cmd = readline("heredoc>");
-			if(ft_strcmp(cmd, delimitr) == 0)
+			if(ft_strncmp(cmd, delimitr, ft_strlen(delimitr)) == 0)
 				break;
 			spaces = check_space(cmd);
 			cmd = space_line(cmd);
@@ -97,66 +95,104 @@ void	redirect(t_main *main)
 {
 	int fd;
 	t_token *token;
+	int type;
+	char *redirect_file;
 
 	token = main->token;
 	while (token && token->next && token->type != TRUNC && token->type != APPEND && token->type != INPUT)
 	{
 		token = token->next;
 	}
-	if (token->type == INPUT && token->next->type == INPUT)
+	if(token->type == INPUT && token->next->type == INPUT)
+		type = 11;
+	else
+		type = token->type;
+	token = token->next;
+	while(token)
 	{
-		heredoc(main, token->next->next->str);
+		if(token->type < 3)
+			redirect_file = token->str;
+		else if (token->type == type)
+		{
+			open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+		}
+		token = token->next;
 	}
-	else if(token->type == TRUNC)
+	if (type == 11)
 	{
-		fd = open(token->next->str, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+		heredoc(main, redirect_file);
+	}
+	if(type == TRUNC)
+	{
+		fd = open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
 		dup2(fd, 1);
 	}
-	else if(token->type == APPEND)
+	else if(type == APPEND)
 	{
-		fd = open(token->next->str, O_WRONLY|O_CREAT|O_APPEND, 0664);
+		fd = open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
 		dup2(fd, 1);
 	}
-	else if(token->type == INPUT)
+	else if(type == INPUT)
 	{
-		fd = open(token->next->str, O_RDONLY|O_CREAT, 0664);
+		fd = open(redirect_file, O_RDONLY|O_CREAT, 0664);
 		dup2(fd, 0);
 	}
 }
 
-void	pipe_redirect(t_main *main)
+void	pipe_redirect(t_main *main, t_token *tokens)
 {
 	int fd;
 	t_token *token;
+	int type;
+	char *redirect_file;
 
-	token = main->token;
-	while (token->type != TRUNC && token->type != APPEND && token->next && token->type != INPUT)
+	token = tokens;
+	while (token->type != PIPE && token->type != TRUNC && token->type != APPEND && token->next && token->type != INPUT)
 	{
 		token = token->next;
 	}
-	if(token->type == TRUNC)
+	if (token->type == PIPE)
+		return ;
+	if(token->type == INPUT && token->next->type == INPUT)
+		type = 11;
+	else
+		type = token->type;
+	token = token->next;
+	while(token)
+	{
+		if (token->type == PIPE)
+			break;
+		if(token->type < 3)
+			redirect_file = token->str;
+		else if (token->type == type)
+		{
+			open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+		}
+		token = token->next;
+	}
+	if(type == TRUNC)
 	{	
 		if(!fork())
 		{
-			fd = open(token->next->str, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+			fd = open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
 			dup2(fd, 1);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
 	}
-	else if(token->type == APPEND)
+	else if(type == APPEND)
 	{
 		if(!fork())
 		{
-			fd = open(token->next->str, O_WRONLY|O_CREAT|O_APPEND, 0664);
+			fd = open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
 			dup2(fd, 1);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
 	}
-	else if(token->type == INPUT)
+	else if(type == INPUT)
 	{
 		if(!fork())
 		{
-			fd = open(token->next->str, O_RDONLY|O_CREAT, 0664);
+			fd = open(redirect_file, O_RDONLY|O_CREAT, 0664);
 			dup2(fd, 0);
 			execve(main->unix_path, main->tokens, main->envp);
 		}

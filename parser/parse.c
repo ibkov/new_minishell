@@ -49,8 +49,9 @@ t_token	*next_token(char *line, int *i)
 
 	j = 0;
 	c = ' ';
-	if (!(token = malloc(sizeof(t_token)))
-	|| !(token->str = malloc(sizeof(char) * next_alloc(line, i))))
+	token = (t_token *)malloc(sizeof(t_token));
+	token->str = (char *)malloc(sizeof(char) * next_alloc(line, i));
+	if (!(token) || !(token->str))
 		return (NULL);
 	while (line[*i] && (line[*i] != ' ' || c != ' '))
 	{
@@ -173,7 +174,8 @@ char	*space_alloc(char *line)
 			count++;
 		i++;
 	}
-	if (!(new = malloc(sizeof(char) * (i + 2 * count + 1))))
+	new = (char *)malloc(sizeof(char) * (i + 2 * count + 1));
+	if (!(new))
 		return (NULL);
 	return (new);
 }

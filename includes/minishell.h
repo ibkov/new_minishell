@@ -112,7 +112,7 @@ void 	echo(t_main *main);
 void    free_argv(char **argv);
 // void	redirect(t_redirect *redirect, char *redirect_file);
 void	redirect(t_main *main);
-void	pipe_redirect(t_main *main);
+void	pipe_redirect(t_main *main, t_token *tokens);
 void	sig_int(int code);
 void	sig_quit(int code);
 void	sig_init(void);

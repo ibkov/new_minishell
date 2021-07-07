@@ -73,7 +73,7 @@ t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 	if(fork() == 0)
 	{
 		dup2(pipes[0][1], 1);
-		pipe_redirect(main);
+		pipe_redirect(main, token);
 		close_pipes(proc_num, pipes);
 		if(is_builtin(token->str))
 		{
@@ -99,6 +99,7 @@ t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int 
 	{
 		dup2(pipes[i - 1][0], 0);
 		close_pipes(proc_num, pipes);
+		pipe_redirect(main, token);
 		if(is_builtin(token->str))
 		{
 			execve_builtin(main);
@@ -125,6 +126,7 @@ t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, in
 		dup2(pipes[i - 1][0], 0);
 		dup2(pipes[i][1], 1);
 		close_pipes(proc_num, pipes);
+		pipe_redirect(main, token);
 		if(is_builtin(token->str))
 		{
 			execve_builtin(main);
