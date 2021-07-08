@@ -38,24 +38,27 @@ void	create_env_ex(t_main *main)
 
 void	sh_export(t_main *main)
 {
-	if (main->token && (!main->token->next \
-	|| (main->token->next && main->token->next->type != ARG)))
+	t_token *token;
+
+	token = main->token;
+	if (token && (!token->next \
+	|| (token->next && token->next->type != ARG)))
 		sh_env(main);
 	else
 	{
-		while ((main->token && main->token->type != END \
-		&& main->token->type != PIPE))
+		while ((token && token->type != END \
+		&& token->type != PIPE))
 		{
-			if (ft_isdigit(main->token->str[0]))
+			if (ft_isdigit(token->str[0]))
 			{
-				printf("export: not an identifier: %s\n", main->token->str);
+				printf("export: not an identifier: %s\n", token->str);
 				return ;
 			}
-			else if (main->token->type == ARG)
+			else if (token->type == ARG)
 			{
 				create_env_ex(main);
 			}
-			main->token = main->token->next;
+			token = token->next;
 		}
 	}
 }

@@ -146,6 +146,17 @@ t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, in
 	return (token);
 }
 
+void free_arg(t_main *main)
+{
+	if(main->tokens)
+	{
+		free(main->tokens);
+		main->tokens = NULL;
+	}
+	free(main->unix_path);
+	main->unix_path = NULL;
+}
+
 int executor(t_main *main, t_token *token)
 {
 	int i;
@@ -170,7 +181,7 @@ int executor(t_main *main, t_token *token)
 			{
 				token = middle_pipe(main, token, pipes, proc_num, i);
 			}
-			free(main->tokens);
+			free_arg(main);
 		}
 		close_pipes(proc_num, pipes);
 		wait_proccess(proc_num);
@@ -184,8 +195,7 @@ int executor(t_main *main, t_token *token)
 			execve_bin(main);
 		else
 			printf("minishell: %s: command not found\n", token->str);
-		if(main->tokens)
-			free(main->tokens);
+		free_arg(main);
 	}
 	return (0);
 }

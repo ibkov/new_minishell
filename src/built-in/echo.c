@@ -9,24 +9,26 @@ void	skip_one_tkn(t_main *main, int *n_flag)
 
 int	sh_echo(t_main *main)
 {
-	int	n_flag;
+	int		n_flag;
+	t_token	*token;
 
+	token = main->token;
 	n_flag = 0;
-	if (!main->token->next)
+	if (!token->next)
 		printf("\n");
 	else
 	{
-		if (ft_strcmp(main->token->next->str, "-n") == 0 \
-			&& ft_strlen(main->token->next->str) == 2)
+		if (ft_strcmp(token->next->str, "-n") == 0 \
+			&& ft_strlen(token->next->str) == 2)
 			skip_one_tkn(main, &n_flag);
-		while (main->token && main->token->type != END)
+		while (token && token->type != END)
 		{
-			if (main->token->type == ARG && main->token->next \
-			&& main->token->next->type != END)
-				printf("%s ", main->token->str);
-			else if (main->token->type == ARG)
-				printf("%s", main->token->str);
-			main->token = main->token->next;
+			if (token->type == ARG && token->next \
+			&& token->next->type != END)
+				printf("%s ", token->str);
+			else if (token->type == ARG)
+				printf("%s", token->str);
+			token = token->next;
 		}
 		if (!n_flag)
 			printf("\n");

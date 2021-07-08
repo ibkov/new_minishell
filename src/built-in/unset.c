@@ -54,22 +54,24 @@ void	create_env(t_main *main, int j, int k)
 void	sh_unset(t_main *main)
 {
 	int	i;
+	t_token *token;
 
+	token = main->token;
 	i = 1;
-	if (!main->token->next)
+	if (!token->next)
 		printf("%s", "unset: not enough arguments\n");
 	else
 	{
-		while (main->token && main->token->type != END)
+		while (token && token->type != END)
 		{
-			if (ft_isdigit(main->token->str[0]))
+			if (ft_isdigit(token->str[0]))
 			{
-				printf("unset: %s: invalid parameter name\n", main->token->str);
+				printf("unset: %s: invalid parameter name\n", token->str);
 				return ;
 			}
-			else if (main->token->type == ARG)
+			else if (token->type == ARG)
 				create_env(main, 0, 0);
-			main->token = main->token->next;
+			token = token->next;
 		}
 	}
 }
