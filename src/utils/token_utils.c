@@ -17,7 +17,7 @@ t_token	*next_cmd(t_token *token, int skip)
 
 t_token *next_token(t_token *token)
 {
-	if(!(token->next))
+	if(token && !token->next)
 	{
 		free(token->str);
 		free(token);

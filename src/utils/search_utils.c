@@ -91,6 +91,7 @@ int	search_in_command(char *command, t_main *main)
 		free(main->token->str);
 		main->token->str = ft_strdup(command + i);
 	}
+	free(command);
 	return (1);
 }
 
@@ -112,14 +113,27 @@ int	search_in_current_dir(char **envp, char *command, t_main *main)
 
 int	search_binary(char *command, char **envp, t_main *main)
 {
+	char *tmp;
+
+	tmp = ft_strdup(command);
 	if ((ft_strncmp(command, "./", 2) == 0))
 	{
 		if (search_in_current_dir(envp, command + 2, main))
-			return (1);
+		{
+		free(tmp);
+		return (1);
+		}
 	}
 	else if (search_in_path(envp, command, main))
+	{
+		free(tmp);
 		return (1);
-	else if (search_in_command(ft_strdup(command), main))
+	}
+	else if (search_in_command(tmp, main))
+	{
+		free(tmp);
 		return (1);
+	}
+	free(tmp);
 	return (0);
 }

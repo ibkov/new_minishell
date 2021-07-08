@@ -21,7 +21,10 @@ int	arg_in_env(t_main *main, char *str, int j)
 		temp_str = ft_split(main->envp[j], '=');
 		if ((ft_strncmp(str, temp_str[0], ft_strlen(temp_str[0])) == 0) \
 		&& ft_strlen(temp_str[0]) == ft_strlen(str))
+		{
+			free_argv(temp_str);
 			return (j);
+		}
 		j++;
 	}
 	free_argv(temp_str);
@@ -53,13 +56,14 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 			{
 				tmp_env[k] = ft_strdup(main->envp[j]);
 				k++;
+				free_argv(temp_str);
 			}
-			free_argv(temp_str);
 			j++;
 		}
 		tmp_env[k] = NULL;
 		free_argv(main->envp);
 		main->envp = tmp_env;
+		free_argv(tmp_env);
 	}
 }
 

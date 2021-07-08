@@ -3,29 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: burswyck <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dmyesha <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/08 15:40:13 by burswyck          #+#    #+#             */
-/*   Updated: 2020/11/08 15:51:14 by burswyck         ###   ########.fr       */
+/*   Created: 2020/11/20 19:50:02 by dmyesha           #+#    #+#             */
+/*   Updated: 2020/11/20 19:51:18 by dmyesha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_free_mem(char **main_array, int main_index)
+static int		ft_clear(char **a, int z)
 {
-	while (main_index >= 0)
+	while (z >= 0)
 	{
-		free(main_array[main_index]);
-		main_index--;
+		free(a[z]);
+		z--;
 	}
-	free(main_array);
+	free(a);
+	return (0);
 }
 
-int	ft_count_words(char const *s, char c)
+static char		*ft_string(int b, int i, const char *src)
 {
-	int	index;
-	int	count_words;
+	char *dst1;
+
+	dst1 = ft_substr((char *)src, i, b - i);
+	if (dst1 == 0)
+		return (0);
+	return (dst1);
+}
+
+static int		ft_strsplit(char **dst, const char *src, char c, int i)
+{
+	int b;
+	int z;
+
+	b = 0;
+	z = 0;
+	while (*(src + b))
+	{
+		if (*(src + b) == c)
+		{
+			b++;
+			i++;
+		}
+		else
+		{
+			while (*(src + b) != c && *(src + b) != '\0')
+				b++;
+			if (!(dst[z] = ft_string(b, i, src)))
+				return (ft_clear(dst, z));
+			z++;
+			if (!*(src + b))
+				break ;
+			i = ++b;
+		}
+	}
+	return (1);
+}
+
+static int		ft_count_words(char const *s, char c)
+{
+	int index;
+	int count_words;
 
 	index = 0;
 	count_words = 0;
@@ -40,78 +80,24 @@ int	ft_count_words(char const *s, char c)
 	return (count_words);
 }
 
-char	**mem_words(char **main_array, char const *s, char c, int index)
+char			**ft_split(char const *src, char c)
 {
-	int	lc;
-	int	i;
+	int		i;
+	int		a;
+	char	**dst;
 
 	i = 0;
-	while (s[index] && index <= (int)ft_strlen(s))
-	{
-		lc = 0;
-		while (s[index] != c && s[index])
-		{
-			lc++;
-			index++;
-		}
-		if (lc != 0)
-		{
-			main_array[i] = (char *)malloc(sizeof(char) * (lc + 1));
-			if (!main_array[i])
-			{
-				ft_free_mem(main_array, i);
-				return (0);
-			}
-			i++;
-		}
-		index++;
-	}
-	return (main_array);
-}
-
-char	**collect_data(char **main_array, char const *s, char c)
-{
-	int		index;
-	int		main_index;
-	int		len_chars;
-
-	len_chars = 0;
-	index = 0;
-	main_index = 0;
-	while (s[index] && index <= (int)ft_strlen(s))
-	{
-		while (s[index] != c && s[index])
-		{
-			main_array[main_index][len_chars] = s[index];
-			len_chars++;
-			index++;
-		}
-		if (len_chars != 0)
-		{
-			main_array[main_index][len_chars] = '\0';
-			main_index++;
-		}
-		len_chars = 0;
-		index++;
-	}
-	main_array[main_index] = 0;
-	return (main_array);
-}
-
-char	**ft_split(char const *s, char c)
-{
-	char	**main_array;
-	int		len_main_array;
-	int		index;
-
-	index = 0;
-	if (!s)
+	if (!src)
 		return (0);
-	len_main_array = ft_count_words(s, c);
-	main_array = (char **)malloc(sizeof(char *) * (len_main_array + 1));
-	if (!main_array)
+	if (*src == '\0')
+		a = 1;
+	else
+		a = ft_count_words(src, c) + 1;
+	dst = (char**)malloc(a * sizeof(char*));
+	if (dst == 0)
 		return (0);
-	main_array = mem_words(main_array, s, c, index);
-	main_array = collect_data(main_array, s, c);
-	return (main_array);
+	if (ft_strsplit(dst, src, c, i) == 0)
+		return (0);
+	dst[a - 1] = NULL;
+	return (dst);
 }

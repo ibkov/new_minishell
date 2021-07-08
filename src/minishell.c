@@ -90,7 +90,7 @@ int main(int argc, __unused char **argv, char **envp)
 			{
 				while (main.token)
 				{
-					if (main.token && main.token->type == END)
+					if (main.token && main.token->type == END && main.token->next)
 						main.token = main.token->next;
 					if(main.token && minishell(&main, main.token))
 						break;

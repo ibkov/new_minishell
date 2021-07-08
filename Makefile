@@ -52,7 +52,7 @@ PARSER = $(addprefix $(PARSER_DIR), $(PARSER_LIST))
 
 UTILS = $(addprefix $(UTILS_DIR), $(UTILS_LIST))
 
-SRCS = $(SRC) $(GNL) $(UTILS) $(PARSER)
+SRCS = $(SRC) $(UTILS) $(PARSER)
 
 OBJ = $(SRCS:.c=.o)
 

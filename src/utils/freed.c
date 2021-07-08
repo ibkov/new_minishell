@@ -16,7 +16,10 @@ void all_freed(t_main *main)
 				free(main->token->prev);
 			}
 			else
+			{
 				free(main->token);
+				main->token = NULL;
+			}
 		}
 	}
 }
