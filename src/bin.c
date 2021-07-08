@@ -24,7 +24,7 @@ int		is_builtin(char *command)
 
 void execve_builtin(t_main *main)
 {
-	main->tokens = create_argv(main->token);
+	main->tokens = create_argv(main->token, 1, 0);
 	
 	if (ft_strncmp(main->token->str,"export", 6) == 0)
 		sh_export(main);
@@ -56,7 +56,7 @@ int		is_bin(char *command, t_main *main)
 
 void execve_bin(t_main *main)
 {
-	main->tokens = create_argv(main->token);
+	main->tokens = create_argv(main->token, 1, 0);
 	g_sig.pid = fork();
 	if(g_sig.pid == 0)
 	{

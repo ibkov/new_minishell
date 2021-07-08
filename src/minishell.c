@@ -69,7 +69,7 @@ void wait_proccess(int proc_num)
 
 t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 {
-	main->tokens = create_argv(token);
+	main->tokens = create_argv(token, 1, 0);
 	if(fork() == 0)
 	{
 		dup2(pipes[0][1], 1);
@@ -94,7 +94,7 @@ t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num)
 
 t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i)
 {
-	main->tokens = create_argv(token);
+	main->tokens = create_argv(token, 1, 0);
 	if(fork() == 0)
 	{
 		dup2(pipes[i - 1][0], 0);
@@ -120,7 +120,7 @@ t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int 
 
 t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i)
 {
-	main->tokens = create_argv(token);
+	main->tokens = create_argv(token, 1, 0);
 	if(fork() == 0)
 	{
 		dup2(pipes[i - 1][0], 0);

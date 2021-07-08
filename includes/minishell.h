@@ -88,7 +88,7 @@ void    change_envp(char **envp, char *variable, char *value);
 void    init_envp(t_main *main, char **envp);
 int 	increment_lvl(char **envp);
 
-char 	**create_argv(t_token *token);
+char 	**create_argv(t_token *token, int i, int j);
 int		search_binary(char *command, char **envp, t_main *main);
 char 	*get_envi_val(char **envp, char *var);
 char	*space_line(char *line);
@@ -121,5 +121,5 @@ int 	arg_in_env(t_main *main, char *str, int j);
 int 	count_env_args(t_main *main, int i);
 int 	sh_echo(t_main *main);
 
-int str_error(char *str, int ret);
+int 	str_error(char *str, int ret);
 #endif
