@@ -37,18 +37,18 @@ int	count_env_args(t_main *main, int i)
 	return (i);
 }
 
-void	create_env(t_main *main, int j, int k)
+void	create_env(t_main *main, t_token *token, int j, int k)
 {
 	char	**tmp_env;
 	char	**temp_str;
 
-	if (arg_in_env(main, main->token->str, 0) != -1)
+	if (arg_in_env(main, token->str, 0) != -1)
 	{
 		tmp_env = (char **)malloc((count_env_args(main, 0)) * sizeof(char *));
 		while (main->envp[j] != NULL)
 		{
 			temp_str = ft_split(main->envp[j], '=');
-			if (ft_strncmp(main->token->str, temp_str[0], \
+			if (ft_strncmp(token->str, temp_str[0], \
 			ft_strlen(temp_str[0])) != 0)
 			{
 				tmp_env[k] = ft_strdup(main->envp[j]);
@@ -82,7 +82,7 @@ void	sh_unset(t_main *main)
 				return ;
 			}
 			else if (token->type == ARG)
-				create_env(main, 0, 0);
+				create_env(main, token, 0, 0);
 			token = token->next;
 		}
 	}

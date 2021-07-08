@@ -45,6 +45,8 @@ int	search_in_path(char **envp, char *command, t_main *main)
 
 	i = 1;
 	path = get_envi_val(envp, "PATH");
+	if (!path)
+		return (0);
 	while (*path != '=')
 		path++;
 	bin_list = ft_split(path, ':');
