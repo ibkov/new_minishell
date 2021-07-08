@@ -85,7 +85,7 @@ int 	argv_len(char **p);
 char    *create_path(char **components, int len);
 int     count_len(char **argv);
 void    change_envp(char **envp, char *variable, char *value);
-void    init_envp(t_main *main, char **envp);
+int		init_envp(t_main *main, char **envp);
 int 	increment_lvl(char **envp);
 
 char 	**create_argv(t_token *token);
@@ -93,11 +93,11 @@ int		search_binary(char *command, char **envp, t_main *main);
 char 	*get_envi_val(char **envp, char *var);
 char	*space_line(char *line);
 t_token *create_tokens(char *line);
-int magic_box(t_token *token, char **envp);
+int 	magic_box(t_token *token, char **envp);
 
 int		is_builtin(char *command);
-void execve_builtin(t_main *main);
-void execve_bin(t_main *main);
+void 	execve_builtin(t_main *main);
+void 	execve_bin(t_main *main);
 int		is_bin(char *command, t_main *main);
 
 void    sh_export(t_main *main);
@@ -110,6 +110,7 @@ void 	echo(t_main *main);
 // void	exit(t_main *main);
 
 void    free_argv(char **argv);
+void 	free_int(int **argv);
 // void	redirect(t_redirect *redirect, char *redirect_file);
 void	redirect(t_main *main);
 void	pipe_redirect(t_main *main, t_token *tokens);

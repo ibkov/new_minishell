@@ -42,8 +42,10 @@ int search_in_path(char **envp, char *command, t_main *main)
         main->unix_path = search_file(dir, bin_list[i], command);
         if(main->unix_path != NULL)
             break;
+        free(main->unix_path);
         i++;
     }
+    free_argv(bin_list);
     if (main->unix_path == NULL)
         return (0);
     return (1);

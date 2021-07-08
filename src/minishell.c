@@ -173,6 +173,7 @@ int executor(t_main *main, t_token *token)
 		}
 		close_pipes(proc_num, pipes);
 		wait_proccess(proc_num);
+		free_int(pipes);
 	}
 	else
 	{
@@ -201,23 +202,71 @@ t_token	*next_cmd(t_token *token, int skip)
 	return (token);
 }
 
-int minishell(t_main *main)
+int minishell(t_main *main, t_token *main_token)
 {
 	t_token *token;
 	int i;
 
-	token = next_cmd(main->token, NOSKIP);
+	token = next_cmd(main_token, 0);
 	while (main->exit == 0 && token)
 	{
 		i = executor(main, token);
-		token = next_cmd(main->token, SKIP);
+		token = next_cmd(main_token, 1);
 	}
 	return (i);
 }
 
+static void all_freed(t_main *main)
+{
+	int i;
+
+	i = 0;
+	if(main->token)
+	{
+		while(main->token)
+		{
+			free(main->token->str);
+			if(main->token->next)
+			{	
+				main->token = main->token->next;
+				free(main->token->prev);
+			}
+			else
+				free(main->token);
+		}
+	}
+}
+
+// t_token *next_token(t_token *token)
+// {
+// 	if(!(token->next))
+// 	{
+// 		free(token->str);
+// 		free(token);
+// 		return (NULL);
+// 	}
+// 	else
+// 	{	
+// 		while(token && token->type != END)
+// 		{
+// 			token = token->next;
+// 			free(token->prev->str);
+// 			free(token->prev);
+// 		}
+// 	}
+// 	if(!(token->next))
+// 	{
+// 		free(token->str);
+// 		free(token);
+// 		return (NULL);
+// 	}
+// 	return (token);
+// }
+
 int main(int argc, __unused char **argv, char **envp)
 {
 	t_main main;
+	
 	int i;
 
 	i = 0;
@@ -234,16 +283,18 @@ int main(int argc, __unused char **argv, char **envp)
 				{
 					if (main.token && main.token->type == END)
 						main.token = main.token->next;
-					if(main.token && minishell(&main))
+					if(main.token && minishell(&main, main.token))
 						break;
+					// main.token = next_token(main.token);
 					while(main.token && main.token->type != END)
+					{
 						main.token = main.token->next;
+					}
 				}
-				// free_argv(main.tokens);
-				// free(main.base_command);
 			}
+			all_freed(&main);
 		}
+		free_argv(main.envp);
 	}
-	free_argv(main.envp);
 	return (main.exit_code);
 }
