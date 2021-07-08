@@ -217,8 +217,6 @@ int		quote_check(__unused t_main *mini, char **line)
 		ft_putendl_fd("minishell: syntax error with open quotes", STDERR);
 		free(*line);
         *line = NULL;
-		// mini->ret = 2;
-		// mini->start = NULL;
 		return (1);
 	}
 	return (0);
@@ -241,7 +239,6 @@ int magic_box(t_token *token, char **envp)
 					token->str = "";
 				else
 					token->str = ft_strdup(var + ft_strlen(cmd));
-					
 			}
 		}
 		token = token->next;
@@ -277,7 +274,6 @@ int   parse(__unused t_main *main)
 		// 	main->token = main->token->next;
 		// }
 		// exit(0);
-		
 		return (1);
 	}
 	else

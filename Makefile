@@ -29,6 +29,7 @@ SRC_LIST = minishell.c \
 			bin.c \
 			search_utils.c \
 			increment_lvl.c \
+			heredoc.c \
 			built-in/unset.c \
 			built-in/cd.c \
 			built-in/export.c \
