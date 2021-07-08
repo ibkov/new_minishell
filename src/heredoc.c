@@ -27,6 +27,8 @@ static int *check_space(char *str)
     j = 0;
     len = 0;
 	spaces = (int *)malloc(sizeof(int) * amount_spaces(str));
+	if(!(spaces))
+		return (NULL);
 	while (str[i])
 	{
 		if(str[i] == ' ')
@@ -50,6 +52,8 @@ static char *add_spaces(char *str, int spaces)
 	char *new_str;
 
 	new_str = ft_strdup(str);
+	if(!(new_str))
+		return (NULL);
 	while(spaces > 0)
 	{
 		tmp = new_str;
