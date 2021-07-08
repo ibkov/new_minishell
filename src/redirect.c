@@ -27,7 +27,6 @@ static void execure_redirect(int type, char *redirect_file, char **envp)
 
 void	redirect(t_main *main)
 {
-	int fd;
 	t_token *token;
 	int type;
 	char *redirect_file;
