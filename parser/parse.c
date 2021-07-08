@@ -266,10 +266,12 @@ int   parse(__unused t_main *main)
 		// 	main->token = main->token->next;
 		// }
 		// exit(0);
+		free(cmd);
 		return (1);
 	}
 	else
 	{
+		free(cmd);
 		return (0);
 	}
 }

@@ -170,6 +170,7 @@ int executor(t_main *main, t_token *token)
 			{
 				token = middle_pipe(main, token, pipes, proc_num, i);
 			}
+			free(main->tokens);
 		}
 		close_pipes(proc_num, pipes);
 		wait_proccess(proc_num);
@@ -182,7 +183,9 @@ int executor(t_main *main, t_token *token)
 		else if (is_bin(token->str, main))
 			execve_bin(main);
 		else
-			printf("minishell: %s: command not found\n", token->str);	
+			printf("minishell: %s: command not found\n", token->str);
+		if(main->tokens)
+			free(main->tokens);
 	}
 	return (0);
 }
@@ -237,31 +240,42 @@ static void all_freed(t_main *main)
 	}
 }
 
-// t_token *next_token(t_token *token)
-// {
-// 	if(!(token->next))
-// 	{
-// 		free(token->str);
-// 		free(token);
-// 		return (NULL);
-// 	}
-// 	else
-// 	{	
-// 		while(token && token->type != END)
-// 		{
-// 			token = token->next;
-// 			free(token->prev->str);
-// 			free(token->prev);
-// 		}
-// 	}
-// 	if(!(token->next))
-// 	{
-// 		free(token->str);
-// 		free(token);
-// 		return (NULL);
-// 	}
-// 	return (token);
-// }
+t_token *next_token(t_token *token)
+{
+	if(!(token->next))
+	{
+		free(token->str);
+		free(token);
+		return (NULL);
+	}
+	else
+	{	
+		while(token && token->next && token->type != END)
+		{
+			token = token->next;
+			if(token)
+			{
+				free(token->prev->str);
+				free(token->prev);
+			}
+		}
+	}
+	if(token && !(token->next))
+	{
+		free(token->str);
+		free(token);
+		return (NULL);
+	}
+	return (token);
+}
+
+void init(t_main *main, char **envp)
+{
+	init_envp(main, envp);
+	sig_init();
+	main->tokens = NULL;
+	main->token = NULL;
+}
 
 int main(int argc, __unused char **argv, char **envp)
 {
@@ -273,8 +287,7 @@ int main(int argc, __unused char **argv, char **envp)
 	main.exit = 0;
 	if(argc == 1)
 	{
-		init_envp(&main, envp);
-		sig_init();
+		init(&main, envp);
 		while(main.exit == 0)
 		{
 			if (parse(&main))
@@ -285,11 +298,7 @@ int main(int argc, __unused char **argv, char **envp)
 						main.token = main.token->next;
 					if(main.token && minishell(&main, main.token))
 						break;
-					// main.token = next_token(main.token);
-					while(main.token && main.token->type != END)
-					{
-						main.token = main.token->next;
-					}
+					main.token = next_token(main.token);
 				}
 			}
 			all_freed(&main);

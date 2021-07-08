@@ -47,7 +47,11 @@ int	search_in_path(char **envp, char *command, t_main *main)
 		i++;
 	}
 	if (main->unix_path == NULL)
+    {
+        free_argv(bin_list);
 		return (0);
+    }
+    free_argv(bin_list);
 	return (1);
 }
 

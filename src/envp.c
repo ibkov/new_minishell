@@ -15,6 +15,21 @@ void	free_argv(char **argv)
 	free(argv);
 }
 
+void	free_int(int **argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i] != NULL)
+		i++;
+	while (i >= 0)
+	{
+		free(argv[i]);
+		i--;
+	}
+	free(argv);
+}
+
 int	init_envp(t_main *main, char **envp)
 {
 	int	i;
