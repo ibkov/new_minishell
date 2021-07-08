@@ -1,27 +1,9 @@
 #include "minishell.h"
 
-int		ignore_sep(char *line, int i)
+int		mem_nxt(char *line, int *i, int j, int count)
 {
-	if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == ';')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '|')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>'
-				&& line[i + 2] && line[i + 2] == '>')
-		return (1);
-	return (0);
-}
-
-int		next_alloc(char *line, int *i)
-{
-	int		count;
-	int		j;
 	char	c;
 
-	count = 0;
-	j = 0;
 	c = ' ';
 	while (line[*i + j] && (line[*i + j] != ' ' || c != ' '))
 	{
@@ -41,49 +23,59 @@ int		next_alloc(char *line, int *i)
 	return (j - count + 1);
 }
 
-t_token	*next_token(char *line, int *i)
+int		skip_del(char *str, int i)
+{
+	if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == ';')
+		return (1);
+	else if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == '|')
+		return (1);
+	else if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == '>')
+		return (1);
+	else if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == '>'
+				&& str[i + 2] && str[i + 2] == '>')
+		return (1);
+	return (0);
+}
+
+t_token	*new_tkn(char *str, int *i, int j, char c)
 {
 	t_token	*token;
-	int		j;
-	char	c;
 
-	j = 0;
-	c = ' ';
 	token = (t_token *)malloc(sizeof(t_token));
-	token->str = (char *)malloc(sizeof(char) * next_alloc(line, i));
+	token->str = (char *)malloc(sizeof(char) * mem_nxt(str, i, 0 , 0));
 	if (!(token) || !(token->str))
 		return (NULL);
-	while (line[*i] && (line[*i] != ' ' || c != ' '))
+	while (str[*i] && (str[*i] != ' ' || c != ' '))
 	{
-		if (c == ' ' && (line[*i] == '\'' || line[*i] == '\"'))
-			c = line[(*i)++];
-		else if (c != ' ' && line[*i] == c)
+		if (c == ' ' && (str[*i] == '\'' || str[*i] == '\"'))
+			c = str[(*i)++];
+		else if (c != ' ' && str[*i] == c)
 		{
 			c = ' ';
 			(*i)++;
 		}
-		else if (line[*i] == '\\' && (*i)++)
-			token->str[j++] = line[(*i)++];
+		else if (str[*i] == '\\' && (*i)++)
+			token->str[j++] = str[(*i)++];
 		else
-			token->str[j++] = line[(*i)++];
+			token->str[j++] = str[(*i)++];
 	}
 	token->str[j] = '\0';
 	return (token);
 }
 
-void	type_arg(t_token *token, int separator)
+void	type_arg(t_token *token, int sep)
 {
 	if (ft_strcmp(token->str, "") == 0)
 		token->type = EMPTY;
-	else if (ft_strcmp(token->str, ">") == 0 && separator == 0)
+	else if (ft_strcmp(token->str, ">") == 0 && sep == 0)
 		token->type = TRUNC;
-	else if (ft_strcmp(token->str, ">>") == 0 && separator == 0)
+	else if (ft_strcmp(token->str, ">>") == 0 && sep == 0)
 		token->type = APPEND;
-	else if (ft_strcmp(token->str, "<") == 0 && separator == 0)
+	else if (ft_strcmp(token->str, "<") == 0 && sep == 0)
 		token->type = INPUT;
-	else if (ft_strcmp(token->str, "|") == 0 && separator == 0)
+	else if (ft_strcmp(token->str, "|") == 0 && sep == 0)
 		token->type = PIPE;
-	else if (ft_strcmp(token->str, ";") == 0 && separator == 0)
+	else if (ft_strcmp(token->str, ";") == 0 && sep == 0)
 		token->type = END;
 	else if (token->prev == NULL || token->prev->type >= TRUNC)
 		token->type = CMD;
@@ -107,8 +99,8 @@ t_token *create_tokens(char *line)
     }
 	while (line[i])
 	{
-		sep = ignore_sep(line, i);
-		next = next_token(line, &i);
+		sep = skip_del(line, i);
+		next = new_tkn(line, &i, 0, ' ');
 		next->prev = prev;
 		if (prev)
 			prev->next = next;

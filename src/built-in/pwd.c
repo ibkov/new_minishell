@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int		sh_pwd(void)
+int	sh_pwd(void)
 {
 	char	*cwd;
 
