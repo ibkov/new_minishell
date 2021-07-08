@@ -41,7 +41,7 @@ char	*create_path(char **components, int len)
 	return (path);
 }
 
-int	skip_arg(t_token *token, int i)
+static int	skip_arg(t_token *token, int i)
 {
 	if (token->next)
 		token = token->next;

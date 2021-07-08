@@ -95,14 +95,9 @@ int    	parse(__unused t_main *main);
 char    *del_spaces(char *str);
 int 	argv_len(char **p);
 char    *create_path(char **components, int len);
-int     count_len(char **argv);
 void    change_envp(char **envp, char *variable, char *value);
 int		init_envp(t_main *main, char **envp);
-int 	increment_lvl(char **envp);
 
-char 	**create_argv(t_token *token, int i, int j);
-int		search_binary(char *command, char **envp, t_main *main);
-char 	*get_envi_val(char **envp, char *var);
 char	*space_line(char *line);
 t_token *create_tokens(char *line);
 int 	magic_box(t_token *token, char **envp);
@@ -111,6 +106,35 @@ int		is_builtin(char *command);
 void 	execve_builtin(t_main *main);
 void 	execve_bin(t_main *main);
 int		is_bin(char *command, t_main *main);
+//Pipes
+t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
+t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
+t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num);
+int		**init_pipes(int amount_pipe);
+void	close_pipes(int proc_num, int **pipes);
+int		is_pipe(t_token *token);
+void	wait_proccess(int proc_num);
+//Utils
+//free utils
+void	all_freed(t_main *main);
+void	free_arg(t_main *main);
+void	free_argv(char **argv);
+void	free_int(int **argv);
+int 	increment_lvl(char **envp);
+//search file utils
+int		search_binary(char *command, char **envp, t_main *main);
+char	*search_file(DIR *dir, char *file_path, char *command);
+int		search_in_path(char **envp, char *command, t_main *main);
+int		search_in_command(char *command, t_main *main);
+int		search_in_current_dir(char **envp, char *command, t_main *main);
+//src utils
+char 	*get_envi_val(char **envp, char *var);
+char 	**create_argv(t_token *token, int i, int j);
+char	*create_path(char **components, int len);
+int     count_len(char **argv);
+//token_utils
+t_token	*next_cmd(t_token *token, int skip);
+t_token *next_token(t_token *token);
 
 void    sh_export(t_main *main);
 void 	sh_unset(t_main *main);
