@@ -22,14 +22,14 @@ GNL_LIST = get_next_line.c \
 SRC_DIR = src/
 
 SRC_LIST = minishell.c \
-			src_utils.c \
-			envp.c \
-			signals.c \
-			redirect.c \
-			bin.c \
-			search_utils.c \
-			increment_lvl.c \
-			heredoc.c \
+			utils/src_utils.c \
+			utils/search_utils.c \
+			utils/freed.c \
+			utils/increment_lvl.c \
+			utils/token_utils.c \
+			utils/utils.c \
+			pipes/pipes_utils.c \
+			pipes/pipes.c \
 			built-in/unset.c \
 			built-in/cd.c \
 			built-in/export.c \
@@ -37,6 +37,11 @@ SRC_LIST = minishell.c \
 			built-in/exit.c \
 			built-in/echo.c \
 			built-in/env.c \
+			envp.c \
+			signals.c \
+			redirect.c \
+			bin.c \
+			heredoc.c \
 
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))

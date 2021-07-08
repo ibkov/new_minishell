@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   src_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmyesha <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/08 19:06:41 by dmyesha           #+#    #+#             */
+/*   Updated: 2021/07/08 19:06:43 by dmyesha          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	count_len(char **argv)
@@ -29,7 +41,7 @@ char	*create_path(char **components, int len)
 	return (path);
 }
 
-int	skip_arg(t_token *token, int i)
+static int	skip_arg(t_token *token, int i)
 {
 	if (token->next)
 		token = token->next;

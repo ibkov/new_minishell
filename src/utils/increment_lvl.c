@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   increment_lvl.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmyesha <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/08 19:09:26 by dmyesha           #+#    #+#             */
-/*   Updated: 2021/07/08 19:09:29 by dmyesha          ###   ########.fr       */
+/*   Created: 2021/07/08 19:05:53 by dmyesha           #+#    #+#             */
+/*   Updated: 2021/07/08 19:05:54 by dmyesha          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	sh_pwd(void)
+int increment_lvl(char **envp)
 {
-	char	*cwd;
+    char *val;
+    int lvl;
+    char *new_lvl;
 
-	cwd = (char *)malloc(sizeof(char) * 1024);
-	if (!cwd)
-		return (0);
-	if (getcwd(cwd, 1024))
-	{
-		printf("%s\n", cwd);
-		free(cwd);
-		return (1);
-	}
-	else
-	{
-		free(cwd);
-		return (0);
-	}
+    val = get_envi_val(envp, "SHLVL");
+    while(*val++ != '=');
+    lvl = ft_atoi(val);
+    lvl++;
+    new_lvl = ft_itoa(lvl);
+    change_envp(envp, "SHLVL=", new_lvl);
+    free(new_lvl);
+
+    return (0);
 }

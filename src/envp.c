@@ -1,34 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envp.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmyesha <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/08 19:05:46 by dmyesha           #+#    #+#             */
+/*   Updated: 2021/07/08 19:05:48 by dmyesha          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-void	free_argv(char **argv)
-{
-	int	i;
-
-	i = 0;
-	while (argv[i] != NULL)
-		i++;
-	while (i >= 0)
-	{
-		free(argv[i]);
-		i--;
-	}
-	free(argv);
-}
-
-void	free_int(int **argv)
-{
-	int	i;
-
-	i = 0;
-	while (argv[i] != NULL)
-		i++;
-	while (i >= 0)
-	{
-		free(argv[i]);
-		i--;
-	}
-	free(argv);
-}
 
 int	init_envp(t_main *main, char **envp)
 {
