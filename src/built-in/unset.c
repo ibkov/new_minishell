@@ -91,7 +91,7 @@ void	sh_unset(t_main *main)
 			}
 			else if (token->type == ARG)
 				create_env(main, token, 0, 0);
-				create_env_declare(main, token, 0, 0);
+				create_env_decl_unset(main, token, 0, 0);
 			token = token->next;
 		}
 	}

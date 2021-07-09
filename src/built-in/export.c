@@ -61,6 +61,7 @@ void	create_env_ex(t_main *main, t_token *token)
 
 	str = ft_split(token->str, '=');
 	line = arg_in_env(main, str[0], 0);
+	create_env_decl_export(main, token, 0);
 	if (line != -1)
 	{
 		main->envp[line] = (char *)malloc(sizeof(char) * \
@@ -70,12 +71,7 @@ void	create_env_ex(t_main *main, t_token *token)
 		// free(str);
 	}
 	else if (ft_strchr(token->str, '='))
-	{
 		create_env_part(main, token, 0);
-		init_declare(main, main->envp);
-	}
-	else
-		add_to_declare(main, token->str);
 	free(str);
 }
 
@@ -104,7 +100,7 @@ void	sh_export(t_main *main)
 			}
 			else if (token->type == ARG)
 			{
-				init_declare(main, main->envp);
+				// init_declare(main, main->envp);
 				create_env_ex(main, token);
 			}
 			token = token->next;
