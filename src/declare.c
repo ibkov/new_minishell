@@ -86,3 +86,4 @@ int	init_declare(t_main *main, char **envp)
     sorted(main->declare);
     return (0);
 }
+

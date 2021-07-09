@@ -43,6 +43,7 @@ SRC_LIST = minishell.c \
 			bin.c \
 			heredoc.c \
 			declare.c \
+			utils/declare_utils.c \
 
 
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))

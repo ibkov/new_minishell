@@ -82,13 +82,15 @@ void	create_env_ex(t_main *main, t_token *token)
 void	sh_export(t_main *main)
 {
 	t_token *token;
+	int i;
 
+	i = 0;
 	token = main->token;
 	if (token && (!token->next \
 	|| (token->next && token->next->type != ARG)))
 	{
-		for(int i = 0; main->declare[i] != NULL; i++)
-			printf("%s\n", main->declare[i]);
+		while (main->declare[i])
+			printf("%s\n", main->declare[i++]);
 	}
 	else
 	{
