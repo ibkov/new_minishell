@@ -19,15 +19,15 @@ void	skip_one_tkn(t_main *main, int *n_flag)
 	main->token = main->token->next;
 }
 
-int	sh_echo(t_main *main)
+void	sh_echo(t_main *main, int	n_flag)
 {
-	int		n_flag;
 	t_token	*token;
 
 	token = main->token;
-	n_flag = 0;
 	if (!token->next)
 		printf("\n");
+	else if (ft_strncmp(token->next->str, "$?", 2))
+		printf("%d\n", g_sig.exit_status);
 	else
 	{
 		if (ft_strcmp(token->next->str, "-n") == 0 \
@@ -45,5 +45,4 @@ int	sh_echo(t_main *main)
 		if (!n_flag)
 			printf("\n");
 	}
-	return (1);
 }

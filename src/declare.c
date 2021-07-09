@@ -33,7 +33,7 @@ static char *add_quotes(char *str)
     free(p);
     free(str);
     p = ft_strjoin(tmp[0], tmp[1]);
-    free_argv(tmp);
+    free_argv(tmp, 0);
     return(p);
 }
 
@@ -75,7 +75,7 @@ int	init_declare(t_main *main, char **envp)
 
     if (main->declare)
     {
-        free_argv(main->declare);
+        free_argv(main->declare, 0);
         main->declare = NULL;
     }
 	while (envp[i] != NULL)

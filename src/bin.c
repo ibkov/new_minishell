@@ -49,7 +49,7 @@ void execve_builtin(t_main *main)
 	else if (ft_strncmp(main->token->str,"pwd", 3) == 0)
 		sh_pwd();
 	else if (ft_strncmp(main->token->str, "echo", 4) == 0)
-		sh_echo(main);
+		sh_echo(main, 0);
 	else if (ft_strncmp(main->token->str, "$?", 2) == 0)
 	{
 		printf("minishell: command not found: %d\n", g_sig.exit_status);

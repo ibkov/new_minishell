@@ -111,6 +111,6 @@ int main(int argc, char **argv, char **envp)
 		}
 		all_freed(&main);
 	}
-	free_argv(main.envp);
+	free_argv(main.envp, 0);
 	return (main.exit_code);
 }
