@@ -58,7 +58,8 @@ void    create_env_decl_unset(t_main *main, t_token *token, int j, int k)
 			temp_str = NULL;
 			j++;
 		}
-		util(tmp_env, k, main);
+        free_argv(main->declare, 0);
+        main->declare = tmp_env;
 	}
 }
 
@@ -129,7 +130,7 @@ void    create_env_decl_export(t_main *main, t_token *token, int j)
         tmp_env[j] = add_quoters(temp_str[0], temp_str[1]);
         tmp_env[j + 1] = NULL;
         sorted(tmp_env);
-        free_argv(main->declare);
+        free_argv(main->declare, 0);
         main->declare = NULL;
         main->declare = tmp_env;
     }

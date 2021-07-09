@@ -165,8 +165,9 @@ void				sig_init(void);
 int					arg_in_env(t_main *main, char *str, int j);
 int					count_env_args(char **envp, int i);
 int					init_declare(t_main *main, char **envp);
-void				create_env_declare(t_main *main,
-						t_token *token, int j, int k);
+void    			create_env_decl_export(t_main *main, t_token *token, int j);
+void    			create_env_decl_unset(t_main *main, t_token *token, int j, int k);
+
 
 int					str_error(char *str, int ret);
 #endif
