@@ -144,6 +144,7 @@ void heredoc(char **envp, char *delimitr)
 		exit(0);
 	}
 	wait(&g_sig.exit_status);
+	g_sig.exit_status = WEXITSTATUS(g_sig.exit_status);
 	dup2(fd[0], 0);
 	close(fd[1]);
 	close(fd[0]);

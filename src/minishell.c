@@ -45,9 +45,7 @@ int executor(t_main *main, t_token *token)
 		else if (is_bin(token->str, main))
 			execve_bin(main);
 		else
-		{
 			printf("minishell: %s: command not found\n", token->str);
-		}
 		free_arg(main);
 	}
 	return (0);
