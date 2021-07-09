@@ -250,6 +250,23 @@ int magic_box(t_token *token, char **envp)
 	return (0);
 }
 
+int point_quoter_check(char *cmd, int i)
+{
+	while (cmd[i])
+	{
+		if (cmd[i] == ';')
+		{
+			if (cmd[i + 1] == ';')
+			{
+				printf("minishell: syntax error near unexpected token \';;\'\n");
+				return 1; 
+			}
+		}
+		i++;
+	}
+	return 0;
+}
+
 int   parse(__unused t_main *main)
 {
     int i;
@@ -267,7 +284,7 @@ int   parse(__unused t_main *main)
 	}
 	if (cmd && cmd[0])
 	{
-		if (quote_check(main, &cmd))
+		if (quote_check(main, &cmd) || point_quoter_check(cmd, 0))
 			return (0);
 		cmd = space_line(cmd);
 		main->token = create_tokens(cmd);

@@ -26,8 +26,10 @@ int	arg_in_env(t_main *main, char *str, int j)
 			return (j);
 		}
 		j++;
+		free_argv(temp_str);
 	}
-	free_argv(temp_str);
+	// if (temp_str)
+	// 	free_argv(temp_str);
 	return (-1);
 }
 
@@ -45,6 +47,7 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 	char	**tmp_env;
 	char	**temp_str;
 
+	temp_str = NULL;
 	if (arg_in_env(main, token->str, 0) != -1)
 	{
 		tmp_env = (char **)malloc((count_env_args(main, 0)) * sizeof(char *));
@@ -63,7 +66,6 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 		tmp_env[k] = NULL;
 		free_argv(main->envp);
 		main->envp = tmp_env;
-		free_argv(tmp_env);
 	}
 }
 
