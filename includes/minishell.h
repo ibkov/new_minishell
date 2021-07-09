@@ -146,7 +146,7 @@ t_token				*next_token(t_token *token);
 
 void				sh_export(t_main *main);
 void				sh_unset(t_main *main);
-void				sh_env(t_main *main);
+void				sh_env(t_main *main, char *str);
 int					sh_pwd(void);
 int					sh_exit(t_main *main);
 void				cd(t_main *main);

@@ -29,8 +29,6 @@ int	arg_in_env(t_main *main, char *str, int j)
 		j++;
 		free_argv(temp_str, 0);
 	}
-	// if (temp_str)
-	// 	free_argv(temp_str);
 	return (-1);
 }
 
@@ -90,8 +88,7 @@ void	sh_unset(t_main *main)
 				return ;
 			}
 			else if (token->type == ARG)
-				// create_env(main, token, 0, 0);
-				create_env_decl_unset(main, token, 0, 0);
+				create_env(main, token, 0, 0);
 			token = token->next;
 		}
 	}

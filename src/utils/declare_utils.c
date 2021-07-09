@@ -101,18 +101,17 @@ void    create_env_decl_export(t_main *main, t_token *token, int j)
 
 	temp_str = NULL;
     tmp = ft_strjoin("declare -x ", token->str);
-    tmp_env = (char **)malloc((count_env_args(main->declare, 0) + 2) * sizeof(char *));
+    temp_str1 = ft_split(tmp, '=');
     if (arg_in_decl(main, tmp, 0) != -1)
 	{
         while (main->declare[j] != NULL)
         {
             temp_str = ft_split(main->declare[j], '=');
-            temp_str1 = ft_split(tmp, '=');
             if (ft_strncmp(temp_str1[0], temp_str[0], ft_strlen(temp_str[0])) == 0)
             {
                 free(main->declare[j]);
                 main->declare[j] = add_quoters(temp_str1[0], temp_str1[1]);
-                sorted(tmp_env);
+                sorted(main->declare);
                 return ;   
             }
         j++;
@@ -121,6 +120,7 @@ void    create_env_decl_export(t_main *main, t_token *token, int j)
     else
     {
         j = 0;
+        tmp_env = (char **)malloc((count_env_args(main->declare, 0) + 2) * sizeof(char *));
         while (main->declare[j] != NULL)
         {
             tmp_env[j] = ft_strdup(main->declare[j]);

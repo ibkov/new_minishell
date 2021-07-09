@@ -43,7 +43,7 @@ void execve_builtin(t_main *main)
 	else if (ft_strncmp(main->token->str, "unset", 5) == 0)
 		sh_unset(main);
 	else if (ft_strncmp(main->token->str,"env", 3) == 0)
-		sh_env(main);
+		sh_env(main, main->token->str);
 	else if (ft_strncmp(main->token->str,"cd", 2) == 0)
 		cd(main);
 	else if (ft_strncmp(main->token->str,"pwd", 3) == 0)

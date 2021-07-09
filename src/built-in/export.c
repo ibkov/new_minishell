@@ -61,18 +61,16 @@ void	create_env_ex(t_main *main, t_token *token)
 
 	str = ft_split(token->str, '=');
 	line = arg_in_env(main, str[0], 0);
-	create_env_decl_export(main, token, 0);
 	if (line != -1)
 	{
 		main->envp[line] = (char *)malloc(sizeof(char) * \
 		(ft_strlen(token->str) + 1));
 		ft_strlcpy(main->envp[line], token->str, \
 		ft_strlen(token->str) + 1);
-		// free(str);
 	}
 	else if (ft_strchr(token->str, '='))
 		create_env_part(main, token, 0);
-	free(str);
+	free_argv(str, 0);
 }
 
 void	sh_export(t_main *main)
@@ -84,10 +82,7 @@ void	sh_export(t_main *main)
 	token = main->token;
 	if (token && (!token->next \
 	|| (token->next && token->next->type != ARG)))
-	{
-		while (main->declare[i])
-			printf("%s\n", main->declare[i++]);
-	}
+		sh_env(main, token->str);
 	else
 	{
 		while ((token && token->type != END \
@@ -97,12 +92,9 @@ void	sh_export(t_main *main)
 			{
 				printf("export: not an identifier: %s\n", token->str);
 				return ;
-			}
+			}	
 			else if (token->type == ARG)
-			{
-				// init_declare(main, main->envp);
 				create_env_ex(main, token);
-			}
 			token = token->next;
 		}
 	}
