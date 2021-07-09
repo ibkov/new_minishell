@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   freed.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmyesha <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/09 22:42:08 by dmyesha           #+#    #+#             */
+/*   Updated: 2021/07/09 22:42:11 by dmyesha          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void all_freed(t_main *main)
+void	all_freed(t_main *main)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(main->token)
+	if (main->token)
 	{
-		while(main->token)
+		while (main->token)
 		{
 			free(main->token->str);
-			if(main->token->next)
+			if (main->token->next)
 			{	
 				main->token = main->token->next;
 				free(main->token->prev);
@@ -24,9 +36,9 @@ void all_freed(t_main *main)
 	}
 }
 
-void free_arg(t_main *main)
+void	free_arg(t_main *main)
 {
-	if(main->tokens)
+	if (main->tokens)
 	{
 		free(main->tokens);
 		main->tokens = NULL;
@@ -35,7 +47,7 @@ void free_arg(t_main *main)
 	main->unix_path = NULL;
 }
 
-void	free_argv(char **argv)
+int	free_argv(char **argv, int ret)
 {
 	int	i;
 
@@ -49,6 +61,7 @@ void	free_argv(char **argv)
 	}
 	free(argv);
 	argv = NULL;
+	return (ret);
 }
 
 void	free_int(int **argv)
@@ -64,4 +77,5 @@ void	free_int(int **argv)
 		i--;
 	}
 	free(argv);
+	argv = NULL;
 }

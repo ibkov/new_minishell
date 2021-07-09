@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "libft.h"
-# include "get_next_line.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -25,8 +24,8 @@
 # include <limits.h>
 # include <errno.h>
 # include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define STDIN 0
 # define STDOUT 1
@@ -35,13 +34,13 @@
 # define NOSKIP 0
 # define SKIP 1
 
-#define STR_ERROR 12
-#define STR_NOFILE 11
-#define STD_ERROR 10
+# define STR_ERROR 12
+# define STR_NOFILE 11
+# define STD_ERROR 10
 
-enum types
+enum e_types
 {
-    EMPTY,
+	EMPTY,
 	CMD,
 	ARG,
 	TRUNC,
@@ -51,8 +50,7 @@ enum types
 	END
 };
 
-
-typedef struct	s_sig
+typedef struct s_sig
 {
 	int				sigint;
 	int				sigquit;
@@ -60,9 +58,9 @@ typedef struct	s_sig
 	pid_t			pid;
 }				t_sig;
 
-extern t_sig g_sig;
+extern t_sig	g_sig;
 
-typedef struct	s_token
+typedef struct s_token
 {
 	char			*str;
 	int				type;
@@ -70,7 +68,7 @@ typedef struct	s_token
 	struct s_token	*next;
 }				t_token;
 
-typedef struct	s_redirect
+typedef struct s_redirect
 {
 	int				amount;
 	int				type;
@@ -80,76 +78,85 @@ typedef struct	s_redirect
 
 typedef struct s_main
 {
-    char    *base_command;
-    char    **tokens;
-    char    *unix_path;
-    char    **envp;
-	char    **declare;
-    int     exit;
-    int     quit;
-	int 	error;
-	int		exit_code;
-	t_token	*token;
-	t_redirect redirect;
-}                   t_main;
-int    	parse(__unused t_main *main);
-char    *del_spaces(char *str);
-int 	argv_len(char **p);
-char    *create_path(char **components, int len);
-void    change_envp(char **envp, char *variable, char *value);
-int		init_envp(t_main *main, char **envp);
+	char			*base_command;
+	int				main_write;
+	int				main_read;
+	char			**tokens;
+	char			*unix_path;
+	char			**envp;
+	char			**declare;
+	int				exit;
+	int				quit;
+	int				error;
+	int				exit_code;
+	int				**pipes;
+	t_token			*token;
+	t_redirect		redirect;
+}				t_main;
+int					parse(__unused t_main *main);
+char				*del_spaces(char *str);
+int					argv_len(char **p);
+char				*create_path(char **components, int len);
+void				change_envp(char **envp, char *variable, char *value);
+int					init_envp(t_main *main, char **envp);
 
-char	*space_line(char *line);
-t_token *create_tokens(char *line);
-int 	magic_box(t_token *token, char **envp);
-char **sorted(char **declare);
+char				*space_line(char *line);
+t_token				*create_tokens(char *line);
+int					magic_box(t_token *token, char **envp);
+char				**sorted(char **declare);
 
-int		is_builtin(char *command);
-void 	execve_builtin(t_main *main);
-void 	execve_bin(t_main *main);
-int		is_bin(char *command, t_main *main);
+int					is_builtin(char *command);
+void				execve_builtin(t_main *main);
+void				execve_bin(t_main *main);
+int					is_bin(char *command, t_main *main);
 //Pipes
-t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
-t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
-t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num);
-int		**init_pipes(int amount_pipe);
-void	close_pipes(int proc_num, int **pipes);
-int		is_pipe(t_token *token);
-void	wait_proccess(int proc_num);
+t_token				*middle_pipe(t_main *main, t_token *token,
+						int proc_num, int i);
+t_token				*last_pipe(t_main *main, t_token *token,
+						int proc_num, int i);
+t_token				*first_pipe(t_main *main, t_token *token,
+						int proc_num);
+int					**init_pipes(int amount_pipe);
+void				close_pipes(int proc_num, int **pipes);
+int					is_pipe(t_token *token);
+void				wait_proccess(int proc_num);
 //Utils
 //free utils
-void	all_freed(t_main *main);
-void	free_arg(t_main *main);
-void	free_argv(char **argv);
-void	free_int(int **argv);
-int 	increment_lvl(char **envp);
+void				all_freed(t_main *main);
+void				free_arg(t_main *main);
+int					free_argv(char **argv, int ret);
+void				free_int(int **argv);
+int					increment_lvl(char **envp);
 //search file utils
-int		search_binary(char *command, char **envp, t_main *main);
-char	*search_file(DIR *dir, char *file_path, char *command);
-int		search_in_path(char **envp, char *command, t_main *main);
-int		search_in_command(char *command, t_main *main);
-int		search_in_current_dir(char **envp, char *command, t_main *main);
+int					search_binary(char *command, char **envp, t_main *main);
+char				*search_file(DIR *dir, char *file_path, char *command);
+int					search_in_path(char **envp, char *command,
+						t_main *main, int i);
+int					search_in_command(char *command, t_main *main);
+int					search_in_current_dir(char **envp,
+						char *command, t_main *main);
 //src utils
-char 	*get_envi_val(char **envp, char *var);
-char 	**create_argv(t_token *token, int i, int j);
-char	*create_path(char **components, int len);
-int     count_len(char **argv);
+char				*get_envi_val(char **envp, char *var);
+char				**create_argv(t_token *token, int i, int j);
+char				*create_path(char **components, int len);
+int					count_len(char **argv);
 //token_utils
-t_token	*next_cmd(t_token *token, int skip);
-t_token *next_token(t_token *token);
+t_token				*next_cmd(t_token *token, int skip);
+t_token				*next_token(t_token *token);
 
-void    sh_export(t_main *main);
-void 	sh_unset(t_main *main);
-void 	sh_env(t_main *main);
-int 	sh_pwd(void);
-int 	sh_exit(t_main *main);
-void    cd(t_main *main);
-void 	echo(t_main *main);
+void				sh_export(t_main *main);
+void				sh_unset(t_main *main);
+void				sh_env(t_main *main);
+int					sh_pwd(void);
+int					sh_exit(t_main *main);
+void				cd(t_main *main);
+void				echo(t_main *main);
+void				sh_echo(t_main *main, int i);
 // void	exit(t_main *main);
 
-void    free_argv(char **argv);
-void 	free_int(int **argv);
+void				free_int(int **argv);
 // void	redirect(t_redirect *redirect, char *redirect_file);
+<<<<<<< HEAD
 void	redirect(t_main *main);
 void	pipe_redirect(t_main *main, t_token *tokens);
 void 	heredoc(char **envp, char *delimitr);
@@ -164,4 +171,19 @@ void    create_env_decl_unset(t_main *main, t_token *token, int j, int k);
 void    create_env_decl_export(t_main *main, t_token *token, int j);
 
 int 	str_error(char *str, int ret);
+=======
+void				redirect(t_main *main);
+void				pipe_redirect(t_main *main, t_token *tokens);
+void				heredoc(char **envp, char *delimitr);
+void				sig_int(int code);
+void				sig_quit(int code);
+void				sig_init(void);
+int					arg_in_env(t_main *main, char *str, int j);
+int					count_env_args(char **envp, int i);
+int					init_declare(t_main *main, char **envp);
+void				create_env_declare(t_main *main,
+						t_token *token, int j, int k);
+
+int					str_error(char *str, int ret);
+>>>>>>> 11cb1344e9d6a678ba17504ff0185bc82715d514
 #endif

@@ -14,29 +14,38 @@
 
 t_sig	g_sig;
 
+void execute_pipe(t_main *main, t_token *token, int i)
+{
+	int proc_num;
+	int j;
+	
+	j = 0;
+	proc_num = i + 1;
+	main->pipes = init_pipes(i);
+	while(j < proc_num)
+	{
+		if(j == 0)
+			token = first_pipe(main, token, proc_num);
+		else if(j == proc_num - 1)
+			token = last_pipe(main, token, proc_num, j);
+		else if(j > 0 && j < proc_num - 1)
+			token = middle_pipe(main, token, proc_num, j);
+		free_arg(main);
+		j++;
+	}
+	close_pipes(proc_num, main->pipes);
+	wait_proccess(proc_num);
+	free_int(main->pipes);
+}
+
 int executor(t_main *main, t_token *token)
 {
 	int i;
-	int **pipes;
 
 	main->token = token;
 	if ((i = is_pipe(token)) > 0)
 	{
-		int proc_num = i + 1;
-		pipes = init_pipes(i);
-		for(int i = 0; i < proc_num; i++)
-		{
-			if(i == 0)
-				token = first_pipe(main, token, pipes, proc_num);
-			else if(i == proc_num - 1)
-				token = last_pipe(main, token, pipes, proc_num, i);
-			else if(i > 0 && i < proc_num - 1)
-				token = middle_pipe(main, token, pipes, proc_num, i);
-			free_arg(main);
-		}
-		close_pipes(proc_num, pipes);
-		wait_proccess(proc_num);
-		free_int(pipes);
+		execute_pipe(main, token, i);
 	}
 	else
 	{
@@ -60,7 +69,7 @@ int minishell(t_main *main, t_token *main_token)
 	while (main->exit == 0 && token)
 	{
 		i = executor(main, token);
-		token = next_cmd(main_token, 1);
+		token = next_cmd(token, 1);
 	}
 	return (i);
 }
@@ -73,35 +82,35 @@ void init(t_main *main, char **envp)
 	sig_init();
 	main->tokens = NULL;
 	main->token = NULL;
+	main->main_read = dup(0);
+	main->main_write = dup(1);
+	main->exit = 0;
 }
 
-int main(int argc, __unused char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
 	t_main main;
-	
 	int i;
 
+	(void)argc;
+	(void)argv;
 	i = 0;
-	main.exit = 0;
-	if(argc == 1)
+	init(&main, envp);
+	while(main.exit == 0)
 	{
-		init(&main, envp);
-		while(main.exit == 0)
+		if (parse(&main))
 		{
-			if (parse(&main))
+			while (main.token)
 			{
-				while (main.token)
-				{
-					if (main.token && main.token->type == END)
-						main.token = main.token->next;
-					if(main.token && minishell(&main, main.token))
-						break;
-					main.token = next_token(main.token);
-				}
+				if (main.token && main.token->type == END)
+					main.token = main.token->next;
+				if(main.token && minishell(&main, main.token))
+					break;
+				main.token = next_token(main.token);
 			}
-			all_freed(&main);
 		}
-		free_argv(main.envp);
+		all_freed(&main);
 	}
+	free_argv(main.envp, 0);
 	return (main.exit_code);
 }

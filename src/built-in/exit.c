@@ -31,7 +31,7 @@ void	ex_digit_error(t_main *main)
 	else
 	{
 		main->exit = 1;
-		main->exit_code = ft_atoi(main->token->next->str) % 256;
+		main->exit_code = ft_atoi(main->token->next->str) % 255;
 		skip_args(main);
 		printf("exit\n");
 	}

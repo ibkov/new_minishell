@@ -36,14 +36,12 @@ char	*search_file(DIR *dir, char *file_path, char *command)
 	return (unix_path);
 }
 
-int	search_in_path(char **envp, char *command, t_main *main)
+int	search_in_path(char **envp, char *command, t_main *main, int i)
 {
 	char	*path;
 	char	**bin_list;
 	DIR		*dir;
-	int		i;
 
-	i = 1;
 	path = get_envi_val(envp, "PATH");
 	if (!path)
 		return (0);
@@ -61,12 +59,8 @@ int	search_in_path(char **envp, char *command, t_main *main)
 		i++;
 	}
 	if (main->unix_path == NULL)
-    {
-        free_argv(bin_list);
-		return (0);
-    }
-    free_argv(bin_list);
-	return (1);
+		return (free_argv(bin_list, 0));
+	return (free_argv(bin_list, 1));
 }
 
 int	search_in_command(char *command, t_main *main)
@@ -113,7 +107,7 @@ int	search_in_current_dir(char **envp, char *command, t_main *main)
 
 int	search_binary(char *command, char **envp, t_main *main)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = ft_strdup(command);
 	if ((ft_strncmp(command, "./", 2) == 0))
@@ -124,7 +118,7 @@ int	search_binary(char *command, char **envp, t_main *main)
 			return (1);
 		}
 	}
-	else if (search_in_path(envp, command, main))
+	else if (search_in_path(envp, command, main, 1))
 	{
 		free(tmp);
 		return (1);

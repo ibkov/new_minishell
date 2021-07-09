@@ -30,7 +30,7 @@ void	create_env_part(t_main *main, t_token *token, int i)
 	p = tmp_env[i - 1];
 	tmp_env[i - 1] = tmp_env[i];
 	tmp_env[i] = p;
-	free_argv(main->envp);
+	free_argv(main->envp, 0);
 	main->envp = tmp_env;
 }
 
@@ -49,7 +49,7 @@ void add_to_declare(t_main *main, char *str)
 		i++;
 	}
 	tmp_env[i] = ft_strjoin("declare -x ", str);
-	free_argv(main->declare);
+	free_argv(main->declare, 0);
 	main->declare = NULL;
 	main->declare = tmp_env;
 }

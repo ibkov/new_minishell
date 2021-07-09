@@ -12,6 +12,28 @@
 
 #include "minishell.h"
 
+static char *file(t_token *token, int type)
+{
+	char *redirect_file;
+
+	while(token && token->type != END)
+	{
+		if(token->type < 3)
+			redirect_file = token->str;
+		else if (token->type == type)
+		{
+			if(type == APPEND)
+				open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
+			if(type == TRUNC)
+				open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+			if(type == INPUT)
+				open(redirect_file, O_RDONLY|O_CREAT, 0664);
+		}
+		token = token->next;
+	}
+	return (redirect_file);
+}
+
 static void execure_redirect(int type, char *redirect_file, char **envp)
 {
 	int fd;
@@ -54,14 +76,7 @@ void	redirect(t_main *main)
 	else
 		type = token->type;
 	token = token->next;
-	while(token)
-	{
-		if(token->type < 3)
-			redirect_file = token->str;
-		else if (token->type == type)
-			open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
-		token = token->next;
-	}
+	redirect_file = file(token, type);
 	execure_redirect(type, redirect_file, main->envp);
 }
 
@@ -94,17 +109,16 @@ static void execute_pipe_redirect(int type, char *redirect_file, t_main *main)
 	g_sig.exit_status = WEXITSTATUS(g_sig.exit_status);
 }
 
-void	pipe_redirect(__unused t_main *main, t_token *tokens)
+void	pipe_redirect(t_main *main, t_token *tokens)
 {
 	t_token *token;
 	int type;
 	char *redirect_file;
 
 	token = tokens;
-	while (token->type != PIPE && token->type != TRUNC && token->type != APPEND && token->next && token->type != INPUT)
-	{
+	while (token->type != PIPE && token->type != TRUNC 
+	&& token->type != APPEND && token->next && token->type != INPUT)
 		token = token->next;
-	}
 	if (token->type == PIPE || token->type == CMD)
 		return ;
 	if(token->type == INPUT && token->next->type == INPUT)
@@ -112,17 +126,6 @@ void	pipe_redirect(__unused t_main *main, t_token *tokens)
 	else
 		type = token->type;
 	token = token->next;
-	while(token)
-	{
-		if (token->type == PIPE)
-			break;
-		if(token->type < 3)
-			redirect_file = token->str;
-		else if (token->type == type)
-		{
-			open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
-		}
-		token = token->next;
-	}
+	redirect_file = file(token, type);
 	execute_pipe_redirect(type, redirect_file, main);
 }
