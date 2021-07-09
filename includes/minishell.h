@@ -84,6 +84,7 @@ typedef struct s_main
     char    **tokens;
     char    *unix_path;
     char    **envp;
+	char    **declare;
     int     exit;
     int     quit;
 	int 	error;
@@ -157,6 +158,7 @@ void	sig_init(void);
 int 	arg_in_env(t_main *main, char *str, int j);
 int 	count_env_args(t_main *main, int i);
 int 	sh_echo(t_main *main);
+int		init_declare(t_main *main, char **envp);
 
 int 	str_error(char *str, int ret);
 #endif
