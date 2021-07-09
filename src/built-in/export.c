@@ -68,7 +68,10 @@ void	create_env_ex(t_main *main, t_token *token)
 		// free(str);
 	}
 	else if (ft_strchr(token->str, '='))
+	{
 		create_env_part(main, token, 0);
+		init_declare(main, main->envp);
+	}
 	else
 		add_to_declare(main, token->str);
 	free(str);
