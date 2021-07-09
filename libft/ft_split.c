@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+typedef struct s_list
+{
+	int		len_main_array;
+	int		index;
+	int		lc;
+	int		i;
+
+}	t_list;
+
 void	ft_free_mem(char **main_array, int main_index)
 {
 	while (main_index >= 0)
@@ -40,32 +49,29 @@ int	ft_count_words(char const *s, char c)
 	return (count_words);
 }
 
-char	**mem_words(char **main_array, char const *s, char c, int index)
+char	**mem_words(char **main_array, char const *s, char c, t_list main)
 {
-	int	lc;
-	int	i;
-
-	lc = 0;
-	i = 0;
-	while (s[index] && index <= (int)ft_strlen(s))
+	main.lc = 0;
+	main.i = 0;
+	while (s[main.index] && main.index <= (int)ft_strlen(s))
 	{
-		while (s[index] != c && s[index])
+		while (s[main.index] != c && s[main.index])
 		{
-			lc++;
-			index++;
+			main.lc++;
+			main.index++;
 		}
-		if (lc != 0)
+		if (main.lc != 0)
 		{
-			main_array[i] = (char*)malloc(sizeof(char) * (lc + 1));
-			if (!(main_array[i]))
+			main_array[main.i] = (char *)malloc(sizeof(char) * (main.lc + 1));
+			if (!(main_array[main.i]))
 			{
-				ft_free_mem(main_array, i);
+				ft_free_mem(main_array, main.i);
 				return (0);
 			}
-			i++;
+			main.i++;
 		}
-		lc = 0;
-		index++;
+		main.lc = 0;
+		main.index++;
 	}
 	return (main_array);
 }
@@ -102,16 +108,16 @@ char	**collect_data(char **main_array, char const *s, char c)
 char	**ft_split(char const *s, char c)
 {
 	char	**main_array;
-	int		len_main_array;
-	int		index;
+	t_list	main;
 
-	index = 0;
+	main.index = 0;
 	if (!s)
 		return (0);
-	len_main_array = ft_count_words(s, c);
-	if (!(main_array = (char**)malloc(sizeof(char*) * (len_main_array + 1))))
+	main.len_main_array = ft_count_words(s, c);
+	main_array = (char **)malloc(sizeof(char *) * (main.len_main_array + 1));
+	if (!(main_array))
 		return (0);
-	main_array = mem_words(main_array, s, c, index);
+	main_array = mem_words(main_array, s, c, main);
 	main_array = collect_data(main_array, s, c);
 	return (main_array);
 }
