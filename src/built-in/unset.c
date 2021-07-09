@@ -18,6 +18,7 @@ int	arg_in_env(t_main *main, char *str, int j)
 
 	while (main->envp[j])
 	{
+		
 		temp_str = ft_split(main->envp[j], '=');
 		if ((ft_strncmp(str, temp_str[0], ft_strlen(temp_str[0])) == 0) \
 		&& ft_strlen(temp_str[0]) == ft_strlen(str))
@@ -90,6 +91,7 @@ void	sh_unset(t_main *main)
 			}
 			else if (token->type == ARG)
 				create_env(main, token, 0, 0);
+				create_env_declare(main, token, 0, 0);
 			token = token->next;
 		}
 	}
