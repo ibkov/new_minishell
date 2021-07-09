@@ -20,9 +20,8 @@ int	init_envp(t_main *main, char **envp)
 	while (envp[i] != NULL)
 		i++;
 	main->envp = (char **)malloc((i + 1) * sizeof(char *));
-    if(!(main->envp))
-        return (1);
-        // return (ALLOC_ERROR);
+	if (!(main->envp))
+		return (1);
 	main->envp[i] = NULL;
 	i = 0;
 	while (envp[i] != NULL)
@@ -32,7 +31,7 @@ int	init_envp(t_main *main, char **envp)
 	}
 	increment_lvl(main->envp);
 	main->unix_path = NULL;
-    return (0);
+	return (0);
 }
 
 void	change_envp(char **envp, char *variable, char *value)
