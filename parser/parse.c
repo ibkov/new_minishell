@@ -275,11 +275,13 @@ int   parse(__unused t_main *main)
     i = 0;
     signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-    cmd = readline("minishell> ");
+	// ft_putstr_fd("minishell> ", STDERR);
+	cmd = readline("minishell> ");
+	// get_next_line(0, &cmd);
 	add_history(cmd);
 	if (cmd == NULL && (main->exit = 1))
 	{
-		ft_putstr_fd("\b\bexit\n", STDERR);
+		ft_putstr_fd("\b exit\n", STDERR);
 	}
 	if (cmd && cmd[0])
 	{
