@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		mem_nxt(char *line, int *i, int j, int count)
+int	mem_nxt(char *line, int *i, int j, int count)
 {
 	char	c;
 
@@ -35,7 +35,7 @@ int		mem_nxt(char *line, int *i, int j, int count)
 	return (j - count + 1);
 }
 
-int		skip_del(char *str, int i)
+int	skip_del(char *str, int i)
 {
 	if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == ';')
 		return (1);
@@ -44,7 +44,7 @@ int		skip_del(char *str, int i)
 	else if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == '>')
 		return (1);
 	else if (str[i] && str[i] == '\\' && str[i + 1] && str[i + 1] == '>'
-				&& str[i + 2] && str[i + 2] == '>')
+		&& str[i + 2] && str[i + 2] == '>')
 		return (1);
 	return (0);
 }
@@ -288,12 +288,6 @@ int   parse(__unused t_main *main)
 		cmd = space_line(cmd);
 		main->token = create_tokens(cmd);
 		magic_box(main->token, main->envp);
-		// while(main->token)
-		// {
-		// 	printf("%s - %d\n", main->token->str, main->token->type);
-		// 	main->token = main->token->next;
-		// }
-		// exit(0);
 		free(cmd);
 		return (1);
 	}

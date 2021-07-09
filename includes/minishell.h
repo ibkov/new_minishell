@@ -166,6 +166,6 @@ void				sig_init(void);
 int					arg_in_env(t_main *main, char *str, int j);
 int					count_env_args(char **envp, int i);
 int					init_declare(t_main *main, char **envp);
-
 int					str_error(char *str, int ret);
+
 #endif
