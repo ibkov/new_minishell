@@ -7,9 +7,10 @@ t_token	*next_cmd(t_token *token, int skip)
 	while (token && token->type != CMD)
 	{
 		token = token->next;
-		if (token && token->type == CMD && token->prev == NULL)
-			;
-		else if (token && token->type == CMD && token->prev->type < END)
+		// if (token && token->type == CMD && token->prev == NULL)
+		// 	;
+		// else 
+		if (token && token->type == CMD && token->prev->type < END)
 			token = token->next;
 	}
 	return (token);
