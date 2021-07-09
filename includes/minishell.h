@@ -102,6 +102,7 @@ int		init_envp(t_main *main, char **envp);
 char	*space_line(char *line);
 t_token *create_tokens(char *line);
 int 	magic_box(t_token *token, char **envp);
+char **sorted(char **declare);
 
 int		is_builtin(char *command);
 void 	execve_builtin(t_main *main);

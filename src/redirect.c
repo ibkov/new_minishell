@@ -91,6 +91,7 @@ static void execute_pipe_redirect(int type, char *redirect_file, t_main *main)
 		}
 	}
 	wait(&g_sig.exit_status);
+	g_sig.exit_status = WEXITSTATUS(g_sig.exit_status);
 }
 
 void	pipe_redirect(__unused t_main *main, t_token *tokens)

@@ -15,8 +15,8 @@
 void	create_env_part(t_main *main, t_token *token, int i)
 {
 	char	**tmp_env;
+	char 	*p;
 
-	// printf("%s", token->str);
 	i = count_env_args(main->envp, 0);
 	tmp_env = (char **)malloc((i + 2) * sizeof(char *));
 	tmp_env[i + 1] = NULL;
@@ -26,10 +26,12 @@ void	create_env_part(t_main *main, t_token *token, int i)
 		tmp_env[i] = ft_strdup(main->envp[i]);
 		i++;
 	}
-	tmp_env[i] = ft_strdup(main->envp[i - 1]);
-	tmp_env[i - 1] = ft_strdup(token->str);
+	tmp_env[i] = ft_strdup(token->str);
+	p = tmp_env[i - 1];
+	tmp_env[i - 1] = tmp_env[i];
+	tmp_env[i] = p;
+	free_argv(main->envp);
 	main->envp = tmp_env;
-	// free_argv(tmp_env);
 }
 
 void add_to_declare(t_main *main, char *str)

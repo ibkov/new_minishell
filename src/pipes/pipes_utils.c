@@ -58,8 +58,8 @@ void wait_proccess(int proc_num)
 	while(i < proc_num)
 	{
 		wait(&g_sig.exit_status);
-		WIFEXITED(g_sig.exit_status);
-		g_sig.exit_status %= 255;
+		g_sig.exit_status = WEXITSTATUS(g_sig.exit_status);
+		g_sig.exit_status %= 256;
 		i++;
 	}
 }
