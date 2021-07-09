@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		is_builtin(char *command)
+int	is_builtin(char *command)
 {
 	if (ft_strcmp(command, "cd") == 0)
 		return (1);
@@ -33,20 +33,19 @@ int		is_builtin(char *command)
 	return (0);
 }
 
-
-void execve_builtin(t_main *main)
+void	execve_builtin(t_main *main)
 {
 	main->tokens = create_argv(main->token, 1, 0);
 	redirect(main);
-	if (ft_strncmp(main->token->str,"export", 6) == 0)
+	if (ft_strncmp(main->token->str, "export", 6) == 0)
 		sh_export(main);
 	else if (ft_strncmp(main->token->str, "unset", 5) == 0)
 		sh_unset(main);
-	else if (ft_strncmp(main->token->str,"env", 3) == 0)
+	else if (ft_strncmp(main->token->str, "env", 3) == 0)
 		sh_env(main, main->token->str);
-	else if (ft_strncmp(main->token->str,"cd", 2) == 0)
+	else if (ft_strncmp(main->token->str, "cd", 2) == 0)
 		cd(main);
-	else if (ft_strncmp(main->token->str,"pwd", 3) == 0)
+	else if (ft_strncmp(main->token->str, "pwd", 3) == 0)
 		sh_pwd();
 	else if (ft_strncmp(main->token->str, "echo", 4) == 0)
 		sh_echo(main, 0);
@@ -62,18 +61,18 @@ void execve_builtin(t_main *main)
 	dup2(main->main_write, 1);
 }
 
-int		is_bin(char *command, t_main *main)
+int	is_bin(char *command, t_main *main)
 {
 	if (search_binary(command, main->envp, main))
 		return (1);
 	return (0);
 }
 
-void execve_bin(t_main *main)
+void	execve_bin(t_main *main)
 {
 	main->tokens = create_argv(main->token, 1, 0);
 	g_sig.pid = fork();
-	if(g_sig.pid == 0)
+	if (g_sig.pid == 0)
 	{
 		redirect(main);
 		execve(main->unix_path, main->tokens, main->envp);
@@ -87,5 +86,4 @@ void execve_bin(t_main *main)
 	}
 	else
 		perror("Error fork\n");
-	
 }

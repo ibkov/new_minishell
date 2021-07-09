@@ -12,17 +12,17 @@
 
 #include "minishell.h"
 
-void show_declare(t_main *main)
+void	show_declare(t_main *main)
 {
-	int i;
-	char *tmp;
+	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (main->envp[i])
 	{
 		tmp = main->envp[i];
 		ft_putstr_fd("declare -x ", 1);
-		while(*tmp != '=')
+		while (*tmp != '=')
 		{
 			ft_putchar_fd(*tmp, 1);
 			tmp++;
