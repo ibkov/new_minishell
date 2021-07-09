@@ -156,22 +156,6 @@ void				sh_echo(t_main *main, int i);
 
 void				free_int(int **argv);
 // void	redirect(t_redirect *redirect, char *redirect_file);
-<<<<<<< HEAD
-void	redirect(t_main *main);
-void	pipe_redirect(t_main *main, t_token *tokens);
-void 	heredoc(char **envp, char *delimitr);
-void	sig_int(int code);
-void	sig_quit(int code);
-void	sig_init(void);
-int 	arg_in_env(t_main *main, char *str, int j);
-int 	count_env_args(char **envp, int i);
-int 	sh_echo(t_main *main);
-int		init_declare(t_main *main, char **envp);
-void    create_env_decl_unset(t_main *main, t_token *token, int j, int k);
-void    create_env_decl_export(t_main *main, t_token *token, int j);
-
-int 	str_error(char *str, int ret);
-=======
 void				redirect(t_main *main);
 void				pipe_redirect(t_main *main, t_token *tokens);
 void				heredoc(char **envp, char *delimitr);
@@ -185,5 +169,4 @@ void				create_env_declare(t_main *main,
 						t_token *token, int j, int k);
 
 int					str_error(char *str, int ret);
->>>>>>> 11cb1344e9d6a678ba17504ff0185bc82715d514
 #endif
