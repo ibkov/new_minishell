@@ -59,8 +59,9 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 			{
 				tmp_env[k] = ft_strdup(main->envp[j]);
 				k++;
-				free_argv(temp_str);
 			}
+			free_argv(temp_str);
+			temp_str = NULL;
 			j++;
 		}
 		tmp_env[k] = NULL;

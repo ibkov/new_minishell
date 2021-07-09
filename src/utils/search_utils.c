@@ -120,8 +120,8 @@ int	search_binary(char *command, char **envp, t_main *main)
 	{
 		if (search_in_current_dir(envp, command + 2, main))
 		{
-		free(tmp);
-		return (1);
+			free(tmp);
+			return (1);
 		}
 	}
 	else if (search_in_path(envp, command, main))

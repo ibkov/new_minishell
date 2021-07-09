@@ -47,9 +47,7 @@ int executor(t_main *main, t_token *token)
 		else
 		{
 			printf("minishell: %s: command not found\n", token->str);
-			main->token = main->token->next;
 		}
-			
 		free_arg(main);
 	}
 	return (0);
