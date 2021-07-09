@@ -14,21 +14,21 @@
 
 t_sig	g_sig;
 
-void execute_pipe(t_main *main, t_token *token, int i)
+void	execute_pipe(t_main *main, t_token *token, int i)
 {
-	int proc_num;
-	int j;
-	
+	int	proc_num;
+	int	j;
+
 	j = 0;
 	proc_num = i + 1;
 	main->pipes = init_pipes(i);
-	while(j < proc_num)
+	while (j < proc_num)
 	{
-		if(j == 0)
+		if (j == 0)
 			token = first_pipe(main, token, proc_num);
-		else if(j == proc_num - 1)
+		else if (j == proc_num - 1)
 			token = last_pipe(main, token, proc_num, j);
-		else if(j > 0 && j < proc_num - 1)
+		else if (j > 0 && j < proc_num - 1)
 			token = middle_pipe(main, token, proc_num, j);
 		free_arg(main);
 		j++;
@@ -38,18 +38,17 @@ void execute_pipe(t_main *main, t_token *token, int i)
 	free_int(main->pipes);
 }
 
-int executor(t_main *main, t_token *token)
+int	executor(t_main *main, t_token *token)
 {
-	int i;
+	int	i;
 
 	main->token = token;
-	if ((i = is_pipe(token)) > 0)
-	{
+	i = is_pipe(token);
+	if (i > 0)
 		execute_pipe(main, token, i);
-	}
 	else
 	{
-		if(is_builtin(token->str))
+		if (is_builtin(token->str))
 			execve_builtin(main);
 		else if (is_bin(token->str, main))
 			execve_bin(main);
@@ -60,7 +59,7 @@ int executor(t_main *main, t_token *token)
 	return (0);
 }
 
-int minishell(t_main *main, t_token *main_token)
+int	minishell(t_main *main, t_token *main_token)
 {
 	t_token	*token;
 	int		i;
@@ -74,7 +73,7 @@ int minishell(t_main *main, t_token *main_token)
 	return (i);
 }
 
-void init(t_main *main, char **envp)
+void	init(t_main *main, char **envp)
 {
 	init_envp(main, envp);
 	main->declare = NULL;
@@ -87,16 +86,16 @@ void init(t_main *main, char **envp)
 	main->exit = 0;
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_main main;
-	int i;
+	t_main	main;
+	int		i;
 
 	(void)argc;
 	(void)argv;
 	i = 0;
 	init(&main, envp);
-	while(main.exit == 0)
+	while (main.exit == 0)
 	{
 		if (parse(&main))
 		{
@@ -104,8 +103,8 @@ int main(int argc, char **argv, char **envp)
 			{
 				if (main.token && main.token->type == END)
 					main.token = main.token->next;
-				if(main.token && minishell(&main, main.token))
-					break;
+				if (main.token && minishell(&main, main.token))
+					break ;
 				main.token = next_token(main.token);
 			}
 		}

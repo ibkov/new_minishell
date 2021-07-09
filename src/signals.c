@@ -41,8 +41,6 @@ void	sig_quit(int code)
 		g_sig.exit_status = 131;
 		g_sig.sigquit = 1;
 	}
-	// else
-	// 	ft_putstr_fd("\b\b  \b\b", STDERR);
 	free(nbr);
 }
 

@@ -12,66 +12,66 @@
 
 #include "minishell.h"
 
-static char *file(t_token *token, int type)
+static	char	*file(t_token *token, int type)
 {
-	char *redirect_file;
+	char	*redirect_file;
 
-	while(token && token->type != END)
+	while (token && token->type != END)
 	{
-		if(token->type < 3)
+		if (token->type < 3)
 			redirect_file = token->str;
 		else if (token->type == type)
 		{
-			if(type == APPEND)
-				open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
-			if(type == TRUNC)
-				open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
-			if(type == INPUT)
-				open(redirect_file, O_RDONLY|O_CREAT, 0664);
+			if (type == APPEND)
+				open (redirect_file, O_WRONLY |O_CREAT |O_APPEND, 0664);
+			if (type == TRUNC)
+				open (redirect_file, O_WRONLY |O_CREAT |O_TRUNC, 0664);
+			if (type == INPUT)
+				open (redirect_file, O_RDONLY |O_CREAT, 0664);
 		}
 		token = token->next;
 	}
 	return (redirect_file);
 }
 
-static void execure_redirect(int type, char *redirect_file, char **envp)
+static	void	execure_redirect(int type, char *redirect_file, char **envp)
 {
-	int fd;
+	int	fd;
 
 	if (type == 11)
 	{
 		heredoc(envp, redirect_file);
 	}
-	if(type == TRUNC)
+	if (type == TRUNC)
 	{
-		fd = open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+		fd = open (redirect_file, O_WRONLY |O_CREAT |O_TRUNC, 0664);
 		dup2(fd, 1);
 	}
-	else if(type == APPEND)
+	else if (type == APPEND)
 	{
-		fd = open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
+		fd = open (redirect_file, O_WRONLY |O_CREAT |O_APPEND, 0664);
 		dup2(fd, 1);
 	}
-	else if(type == INPUT)
+	else if (type == INPUT)
 	{
-		fd = open(redirect_file, O_RDONLY|O_CREAT, 0664);
+		fd = open (redirect_file, O_RDONLY |O_CREAT, 0664);
 		dup2(fd, 0);
 	}
 }
 
 void	redirect(t_main *main)
 {
-	t_token *token;
-	int type;
-	char *redirect_file;
+	t_token	*token;
+	int		type;
+	char	*redirect_file;
 
 	token = main->token;
-	while (token && token->next && token->type != TRUNC 
-	&& token->type != APPEND && token->type != INPUT)
+	while (token && token->next && token->type != TRUNC
+		&& token->type != APPEND && token->type != INPUT)
 		token = token->next;
 	if (token->type == PIPE || token->type == CMD)
 		return ;
-	if(token->type == INPUT && token->next->type == INPUT)
+	if (token->type == INPUT && token->next->type == INPUT)
 		type = 11;
 	else
 		type = token->type;
@@ -80,27 +80,28 @@ void	redirect(t_main *main)
 	execure_redirect(type, redirect_file, main->envp);
 }
 
-static void execute_pipe_redirect(int type, char *redirect_file, t_main *main)
+static	void	execute_pipe_redirect(int type,
+					char *redirect_file, t_main *main)
 {
-	int fd;
+	int	fd;
 
-	if(!fork())
+	if (!fork())
 	{
-		if(type == TRUNC)
+		if (type == TRUNC)
 		{
-			fd = open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+			fd = open(redirect_file, O_WRONLY |O_CREAT |O_TRUNC, 0664);
 			dup2(fd, 1);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
 		else if (type == APPEND)
 		{
-			fd = open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
+			fd = open(redirect_file, O_WRONLY |O_CREAT |O_APPEND, 0664);
 			dup2(fd, 1);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
 		else if (type == INPUT)
 		{
-			fd = open(redirect_file, O_RDONLY|O_CREAT, 0664);
+			fd = open(redirect_file, O_RDONLY |O_CREAT, 0664);
 			dup2(fd, 0);
 			execve(main->unix_path, main->tokens, main->envp);
 		}
@@ -111,17 +112,17 @@ static void execute_pipe_redirect(int type, char *redirect_file, t_main *main)
 
 void	pipe_redirect(t_main *main, t_token *tokens)
 {
-	t_token *token;
-	int type;
-	char *redirect_file;
+	t_token	*token;
+	int		type;
+	char	*redirect_file;
 
 	token = tokens;
-	while (token->type != PIPE && token->type != TRUNC 
-	&& token->type != APPEND && token->next && token->type != INPUT)
+	while (token->type != PIPE && token->type != TRUNC
+		&& token->type != APPEND && token->next && token->type != INPUT)
 		token = token->next;
 	if (token->type == PIPE || token->type == CMD)
 		return ;
-	if(token->type == INPUT && token->next->type == INPUT)
+	if (token->type == INPUT && token->next->type == INPUT)
 		type = 11;
 	else
 		type = token->type;

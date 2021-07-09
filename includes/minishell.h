@@ -155,6 +155,7 @@ void				sh_echo(t_main *main, int i);
 // void	exit(t_main *main);
 
 void				free_int(int **argv);
+int					amount_spaces(char *str);
 // void	redirect(t_redirect *redirect, char *redirect_file);
 void				redirect(t_main *main);
 void				pipe_redirect(t_main *main, t_token *tokens);

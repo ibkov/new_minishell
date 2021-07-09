@@ -79,3 +79,19 @@ void	free_int(int **argv)
 	free(argv);
 	argv = NULL;
 }
+
+int	amount_spaces(char *str)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == ' ' && str[i + 1] != ' ')
+			count++;
+		i++;
+	}
+	return (count);
+}
