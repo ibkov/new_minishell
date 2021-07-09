@@ -91,6 +91,7 @@ typedef struct s_main
     int     quit;
 	int 	error;
 	int		exit_code;
+	int		**pipes;
 	t_token	*token;
 	t_redirect redirect;
 }                   t_main;
@@ -111,9 +112,9 @@ void 	execve_builtin(t_main *main);
 void 	execve_bin(t_main *main);
 int		is_bin(char *command, t_main *main);
 //Pipes
-t_token *middle_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
-t_token *last_pipe(t_main *main, t_token *token, int **pipes, int proc_num, int i);
-t_token *first_pipe(t_main *main, t_token *token, int **pipes, int proc_num);
+t_token *middle_pipe(t_main *main, t_token *token, int proc_num, int i);
+t_token *last_pipe(t_main *main, t_token *token, int proc_num, int i);
+t_token *first_pipe(t_main *main, t_token *token, int proc_num);
 int		**init_pipes(int amount_pipe);
 void	close_pipes(int proc_num, int **pipes);
 int		is_pipe(t_token *token);
