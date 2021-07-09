@@ -61,7 +61,8 @@ int	init_declare(t_main *main, char **envp)
 
 	i = 0;
 
-    if (main->declare){
+    if (main->declare)
+    {
         free_argv(main->declare);
         main->declare = NULL;
     }
@@ -70,7 +71,6 @@ int	init_declare(t_main *main, char **envp)
 	main->declare = (char **)malloc((i + 1) * sizeof(char *));
     if(!(main->declare))
         return (1);
-        // return (ALLOC_ERROR);
 	main->declare[i] = NULL;
 	i = 0;
 	while (envp[i] != NULL)

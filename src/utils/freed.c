@@ -48,6 +48,7 @@ void	free_argv(char **argv)
 		i--;
 	}
 	free(argv);
+	argv = NULL;
 }
 
 void	free_int(int **argv)
