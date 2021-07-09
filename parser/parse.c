@@ -236,7 +236,7 @@ int magic_box(t_token *token, char **envp)
 		if(token->type == ARG || token->type == CMD)
 		{
 			cmd = token->str;
-			if (*cmd == -36 || *cmd == 36)
+			if ((*cmd == -36 || *cmd == 36) && *(cmd + 1) != '?')
 			{
 				free(token->str);
 				if(!(var = get_envi_val(envp, cmd + 1)))
@@ -275,9 +275,7 @@ int   parse(__unused t_main *main)
     i = 0;
     signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-	// ft_putstr_fd("minishell> ", STDERR);
 	cmd = readline("minishell> ");
-	// get_next_line(0, &cmd);
 	add_history(cmd);
 	if (cmd == NULL && (main->exit = 1))
 	{

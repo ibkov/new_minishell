@@ -52,7 +52,7 @@ void execve_builtin(t_main *main)
 		sh_echo(main);
 	else if (ft_strncmp(main->token->str, "$?", 2) == 0)
 	{
-		printf("minishell: command not found: %d\n", main->exit_code);
+		printf("minishell: command not found: %d\n", g_sig.exit_status);
 		return ;
 	}
 	else if (ft_strncmp(main->token->str, "exit", 4) == 0)
@@ -79,7 +79,8 @@ void execve_bin(t_main *main)
 	}
 	else if (g_sig.pid > 0)
 	{
-		waitpid(g_sig.pid, 0, 0);
+		waitpid(g_sig.pid, &g_sig.exit_status, 0);
+		WIFEXITED(g_sig.exit_status);
 	}
 	else
 		perror("Error fork\n");
