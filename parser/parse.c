@@ -271,12 +271,11 @@ int   parse(__unused t_main *main)
 {
     int i;
     char *cmd;
-
-	using_history();
+	
     i = 0;
     signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
-    cmd = readline("\033[0;36m\033[1mminishell ▸ \033[0m");
+    cmd = readline("minishell> ");
 	add_history(cmd);
 	if (cmd == NULL && (main->exit = 1))
 	{
