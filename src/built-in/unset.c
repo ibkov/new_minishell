@@ -18,7 +18,6 @@ int	arg_in_env(t_main *main, char *str, int j)
 
 	while (main->envp[j])
 	{
-		
 		temp_str = ft_split(main->envp[j], '=');
 		if ((ft_strncmp(str, temp_str[0], ft_strlen(temp_str[0])) == 0) \
 		&& ft_strlen(temp_str[0]) == ft_strlen(str))
@@ -49,7 +48,8 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 	temp_str = NULL;
 	if (arg_in_env(main, token->str, 0) != -1)
 	{
-		tmp_env = (char **)malloc((count_env_args(main->envp, 0)) * sizeof(char *));
+		tmp_env = (char **)malloc((count_env_args \
+			(main->envp, 0)) * sizeof(char *));
 		while (main->envp[j] != NULL)
 		{
 			temp_str = ft_split(main->envp[j], '=');
@@ -71,8 +71,8 @@ void	create_env(t_main *main, t_token *token, int j, int k)
 
 void	sh_unset(t_main *main)
 {
-	int	i;
-	t_token *token;
+	int		i;
+	t_token	*token;
 
 	token = main->token;
 	i = 1;

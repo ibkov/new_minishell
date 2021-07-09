@@ -15,7 +15,7 @@
 void	create_env_part(t_main *main, t_token *token, int i)
 {
 	char	**tmp_env;
-	char 	*p;
+	char	*p;
 
 	i = count_env_args(main->envp, 0);
 	tmp_env = (char **)malloc((i + 2) * sizeof(char *));
@@ -34,10 +34,10 @@ void	create_env_part(t_main *main, t_token *token, int i)
 	main->envp = tmp_env;
 }
 
-void add_to_declare(t_main *main, char *str)
+void	add_to_declare(t_main *main, char *str)
 {
 	char	**tmp_env;
-	int i;
+	int		i;
 
 	i = count_env_args(main->declare, 0);
 	tmp_env = (char **)malloc((i + 2) * sizeof(char *));
@@ -75,8 +75,8 @@ void	create_env_ex(t_main *main, t_token *token)
 
 void	sh_export(t_main *main)
 {
-	t_token *token;
-	int i;
+	t_token	*token;
+	int		i;
 
 	i = 0;
 	token = main->token;
