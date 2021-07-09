@@ -27,7 +27,7 @@ int	argv_len(char **p)
 char	*del_spaces(char *str)
 {
 	int	len;
-	
+
 	len = 0;
 	if (str)
 	{
@@ -36,7 +36,7 @@ char	*del_spaces(char *str)
 			if (*str == ' ')
 				str++;
 			else
-				break;
+				break ;
 		}
 		len = ft_strlen(str) - 1;
 		while (*(str + len) == ' ')

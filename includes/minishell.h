@@ -93,15 +93,18 @@ typedef struct s_main
 	t_token			*token;
 	t_redirect		redirect;
 }				t_main;
-int					parse(__unused t_main *main);
+int					parse(t_main *main, char *cmd);
 char				*del_spaces(char *str);
 int					argv_len(char **p);
 char				*create_path(char **components, int len);
 void				change_envp(char **envp, char *variable, char *value);
 int					init_envp(t_main *main, char **envp);
+char				*space_alloc(char *line);
+int					quotes(char *line, int index);
+int					is_sep(char *line, int i);
 
-char				*space_line(char *line);
-t_token				*create_tokens(char *line);
+char				*space_line(char *line, int i, int j);
+t_token				*create_tokens(char *line, int i);
 int					magic_box(t_token *token, char **envp);
 char				**sorted(char **declare);
 

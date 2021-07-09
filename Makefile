@@ -9,6 +9,8 @@ LIBFT = -L. -lft -lreadline
 PARSER_DIR = parser/
 
 PARSER_LIST = parse.c \
+				parse_utils.c \
+				parse_utils1.c \
 
 UTILS_DIR = parser/utils/
 

@@ -96,8 +96,8 @@ static	char	*circle(char *delimitr, char **envp, char *str)
 		if (ft_strncmp(cmd, delimitr, ft_strlen(delimitr)) == 0)
 			break ;
 		spaces = check_space(cmd, 0, 0);
-		cmd = space_line(cmd);
-		token = create_tokens(cmd);
+		cmd = space_line(cmd, 0, 0);
+		token = create_tokens(cmd, 0);
 		magic_box(token, envp);
 		str = pandora(token, spaces, str, 0);
 		free(spaces);

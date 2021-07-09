@@ -97,7 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	init(&main, envp);
 	while (main.exit == 0)
 	{
-		if (parse(&main))
+		if (parse(&main, NULL))
 		{
 			while (main.token)
 			{
