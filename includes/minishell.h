@@ -81,6 +81,8 @@ typedef struct	s_redirect
 typedef struct s_main
 {
     char    *base_command;
+	int		main_write;
+	int		main_read;
     char    **tokens;
     char    *unix_path;
     char    **envp;

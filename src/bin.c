@@ -37,7 +37,7 @@ int		is_builtin(char *command)
 void execve_builtin(t_main *main)
 {
 	main->tokens = create_argv(main->token, 1, 0);
-	
+	redirect(main);
 	if (ft_strncmp(main->token->str,"export", 6) == 0)
 		sh_export(main);
 	else if (ft_strncmp(main->token->str, "unset", 5) == 0)
@@ -54,10 +54,12 @@ void execve_builtin(t_main *main)
 	{
 		printf("minishell: command not found: %d\n", g_sig.exit_status);
 		g_sig.exit_status = 127;
+		dup2(main->main_write, 1);
 		return ;
 	}
 	else if (ft_strncmp(main->token->str, "exit", 4) == 0)
 		sh_exit(main);
+	dup2(main->main_write, 1);
 }
 
 int		is_bin(char *command, t_main *main)

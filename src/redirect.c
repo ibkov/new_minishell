@@ -59,7 +59,7 @@ void	redirect(t_main *main)
 		if(token->type < 3)
 			redirect_file = token->str;
 		else if (token->type == type)
-			open(redirect_file, O_WRONLY|O_CREAT|O_TRUNC, 0664);
+			open(redirect_file, O_WRONLY|O_CREAT|O_APPEND, 0664);
 		token = token->next;
 	}
 	execure_redirect(type, redirect_file, main->envp);
