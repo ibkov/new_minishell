@@ -26,24 +26,31 @@ static char *add_quotes(char *str)
 }
 
 
-void sorted(char **declare)
+char **sorted(char **declare)
 {
     int i = 0;
     int j = 0;
-    int count;
+    int count = 0;
+    char *tmp;
 
     while (declare[count])
         count++;
     while (i < count)
     {
-        j = i;
-        while (j < count)
+        j = 0;
+        while (j < count - 1)
         {
-            if (declare[i] )
+            if (ft_strcmp(declare[j], declare[j + 1]) > 0)
+            {
+                tmp = declare[j];
+                declare[j] = declare[j + 1];
+                declare[j + 1] = tmp;
+            }
             j++;
         }
         i++;
     }
+    return (declare);
 }
 
 int	init_declare(t_main *main, char **envp)
@@ -53,6 +60,11 @@ int	init_declare(t_main *main, char **envp)
     char *p;
 
 	i = 0;
+
+    if (main->declare){
+        free_argv(main->declare);
+        main->declare = NULL;
+    }
 	while (envp[i] != NULL)
 		i++;
 	main->declare = (char **)malloc((i + 1) * sizeof(char *));
@@ -65,14 +77,12 @@ int	init_declare(t_main *main, char **envp)
 	{
         var = add_quotes(ft_strdup(envp[i]));
         p = var;
-        
         var = ft_strjoin("declare -x ", var);
         free(p);
         p = NULL;
 		main->declare[i] = var;
 		i++;
 	}
-	// increment_lvl(main->envp);
-	main->unix_path = NULL;
+    sorted(main->declare);
     return (0);
 }

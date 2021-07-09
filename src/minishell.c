@@ -69,11 +69,9 @@ int minishell(t_main *main, t_token *main_token)
 
 void init(t_main *main, char **envp)
 {
-	init_declare(main, envp);
-	for(int i = 0; main->declare[i] != NULL; i++)
-		printf("%s\n", main->declare[i]);
-	sleep(1000);
 	init_envp(main, envp);
+	main->declare = NULL;
+	init_declare(main, main->envp);
 	sig_init();
 	main->tokens = NULL;
 	main->token = NULL;

@@ -156,7 +156,7 @@ void	sig_int(int code);
 void	sig_quit(int code);
 void	sig_init(void);
 int 	arg_in_env(t_main *main, char *str, int j);
-int 	count_env_args(t_main *main, int i);
+int 	count_env_args(char **envp, int i);
 int 	sh_echo(t_main *main);
 int		init_declare(t_main *main, char **envp);
 
